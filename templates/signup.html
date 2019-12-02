@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>signup</title>
+</head>
+
+<body>
+    <div>
+        <form id="signupForm" class="submit" encType="multipart/form-data">
+            <input id="signUpName" name="name" placeholder="姓名"><br>
+            <input id="signUpEmail" name="email" type="email" placeholder="信箱"><br>
+            <input id="signUpSelfIntro" name="selfIntro" placeholder="自我介紹"><br>
+            <input id="signUpLink" name="link" placeholder="個人作品連結"><br>
+            <label class="button border black padding opacity round center">
+                <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none"></input>
+                <h7>CHOOSE FILE</h7>
+            </label>
+            <div id="previews">
+                <img id="previewIMG" class="padding" height='200'>
+            </div>
+        </form>
+    </div>
+    <button id="send">送出</button>
+
+</body>
+
+</html>
