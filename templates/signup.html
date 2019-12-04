@@ -14,7 +14,7 @@
         <form id="signupForm" class="submit" encType="multipart/form-data">
             <input id="signUpName" name="name" placeholder="姓名"><br>
             <input id="signUpEmail" name="email" type="email" placeholder="信箱"><br>
-            <input id="signUpSelfIntro" name="selfIntro" placeholder="自我介紹"><br>
+            <input id="signUpIntro" name="intro" placeholder="自我介紹"><br>
             <input id="signUpLink" name="link" placeholder="個人作品連結"><br>
             <label class="button border black padding opacity round center">
                 <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none"></input>
@@ -26,6 +26,21 @@
         </form>
     </div>
     <button id="send">送出</button>
+
+
+
+    <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script src="/static/JS/signup.js"></script>
+    <script src="/static/JS/imagePreview.js"></script>
+</body>
 
 </body>
 

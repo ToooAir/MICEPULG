@@ -5,6 +5,8 @@ import os
 import sys
 import re
 
+from uuid import uuid1
+
 from argparse import ArgumentParser
 
 from flask import Flask, request, abort, render_template, send_from_directory, make_response
@@ -76,6 +78,31 @@ def bind():
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
+
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.form
+    lineUserId = data["lineUserId"]
+    name = data["name"]
+    email = data["email"]
+    intro = data["intro"]
+    link = data["link"]
+    image = request.files["images"]
+
+    if(image.filename != ""):
+        filename = str(uuid1()) + "." +image.filename.split(".")[-1]
+        image.save(os.path.join(imageSaveDir, filename))
+    else:
+        filename = "default.jpg"
+    alchemyFunc.addUser(lineUserId,name,email,intro,link,filename)
+
+    resp = make_response(json.dumps(data))
+    resp.status_code = 200
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    return resp
+
+
 
 # messaging API
 @app.route("/callback", methods=["POST"])

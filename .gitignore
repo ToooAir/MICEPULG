@@ -3,4 +3,4 @@
 .DS_Store
 /static/uploadImage/
 /.vscode/
-/__pycache__/
+/__pycache__/*

@@ -9,7 +9,7 @@ window.onload = function (e) {
 };
 
 function initializeApp(data) {
-    // todo line is logged in or not
+    // todo:liff close window
     var lineUserId = data.context.userId;
 }
 
@@ -28,7 +28,6 @@ function inputSelect() {
 function login(lineUserId) {
     $("#login").click(function () {
         var number = getDigit();
-        window.alert(number);
         $.ajax({
             type: "POST",
             cache: false,
