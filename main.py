@@ -42,7 +42,7 @@ def signup():
 
 @app.route("/edit", methods=["GET"])
 def edit():
-    return render_template()
+    return render_template("edit.html")
 
 
 @app.route("/find", methods=["GET"])
@@ -72,12 +72,13 @@ def bind():
     elif(alchemyFunc.checkRepeat(bindId)):
         resp = make_response("該序號已被使用")
     else:
-        alchemyFunc.bindUser(bindId,lineUserId)
+        alchemyFunc.bindUser(bindId, lineUserId)
         resp = make_response(json.dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
+
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -90,11 +91,11 @@ def register():
     image = request.files["images"]
 
     if(image.filename != ""):
-        filename = str(uuid1()) + "." +image.filename.split(".")[-1]
+        filename = str(uuid1()) + "." + image.filename.split(".")[-1]
         image.save(os.path.join(imageSaveDir, filename))
     else:
         filename = "default.jpg"
-    alchemyFunc.addUser(lineUserId,name,email,intro,link,filename)
+    alchemyFunc.addUser(lineUserId, name, email, intro, link, filename)
 
     resp = make_response(json.dumps(data))
     resp.status_code = 200
@@ -103,6 +104,40 @@ def register():
     return resp
 
 
+@app.route("/editprofile", methods=["POST"])
+def editprofile():
+    data = request.form
+    lineUserId = data["lineUserId"]
+    name = data["name"]
+    email = data["email"]
+    intro = data["intro"]
+    link = data["link"]
+    image = request.files["images"]
+    
+    filename = alchemyFunc.getPicture(lineUserId)
+    if(image.filename != ""):
+        if(os.path.isfile(imageSaveDir+filename)):
+            os.remove(imageSaveDir+filename)
+        filename = str(uuid1()) + "." + image.filename.split(".")[-1]
+        image.save(os.path.join(imageSaveDir, filename))
+
+    alchemyFunc.editUser(lineUserId,name,email,intro,link,filename)
+    resp = make_response(json.dumps(data))
+    resp.status_code = 200
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
+
+
+@app.route("/getprofile", methods=["POST"])
+def getprofile():
+    data = request.form
+    lineUserId = data["lineUserId"]
+    profile = alchemyFunc.getProfile(lineUserId)
+    resp = make_response(json.dumps(profile))
+    resp.status_code = 200
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    return resp
 
 # messaging API
 @app.route("/callback", methods=["POST"])
