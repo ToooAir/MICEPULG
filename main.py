@@ -1,5 +1,5 @@
 from config import config
-# import alchemyFunc
+import alchemyFunc
 
 import os
 import sys
@@ -20,37 +20,65 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
 )
 
-#config
+# config
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
 imageSaveDir = 'static/uploadImage/'
 
 app = Flask(__name__)
 
-#website
+# website
 @app.route("/login", methods=["GET"])
 def login():
     return render_template("login.html")
+
 
 @app.route("/signup", methods=["GET"])
 def signup():
     return render_template("signup.html")
 
+
 @app.route("/edit", methods=["GET"])
 def edit():
     return render_template()
+
 
 @app.route("/find", methods=["GET"])
 def find():
     return render_template("find.html")
 
+
 @app.route("/comment", methods=["GET"])
 def comment():
     return render_template()
+
+
+@app.route("/static/<path:path>")
+def send_static(path):
+    return send_from_directory("static", path)
+
 # Todo 留言板還沒做(HTML，SQL，Function)
 
+# AJAX
+@app.route("/bind", methods=["POST"])
+def bind():
+    data = request.form
+    bindId = data["bindId"]
+    lineUserId = data["lineUserId"]
+    if(alchemyFunc.checkNonExist(bindId)):
+        resp = make_response("該序號並不存在")
+    elif(alchemyFunc.checkRepeat(bindId)):
+        resp = make_response("該序號已被使用")
+    else:
+        alchemyFunc.bindUser(bindId,lineUserId)
+        resp = make_response(json.dumps(data))
+    resp.status_code = 200
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    return resp
+
 # messaging API
-@app.route("/callback", methods=['POST'])
+@app.route("/callback", methods=["POST"])
 def callback():
     signature = request.headers["X-Line-Signature"]
 
@@ -86,7 +114,6 @@ def message_text(event):
                 TextSendMessage(text="(傳送的非數字無法查詢)")
             ]
         )
-
 
 
 if __name__ == "__main__":
