@@ -1,7 +1,4 @@
 window.onload = function (e) {
-    var lineUserId = "lol";
-    this.singUp(lineUserId);
-
     liff.init(function (data) {
         initializeApp(data);
     });
@@ -9,6 +6,7 @@ window.onload = function (e) {
 
 function initializeApp(data) {
     var lineUserId = data.context.userId;
+    this.singUp(lineUserId);
 }
 
 function singUp(lineUserId) {

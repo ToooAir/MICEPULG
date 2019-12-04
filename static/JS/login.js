@@ -1,8 +1,5 @@
 window.onload = function (e) {
-    var lineUserId = "lol";
     this.inputSelect();
-    this.login(lineUserId);
-
     liff.init(function (data) {
         initializeApp(data);
     });
@@ -11,6 +8,7 @@ window.onload = function (e) {
 function initializeApp(data) {
     // todo:liff close window
     var lineUserId = data.context.userId;
+    this.login(lineUserId);
 }
 
 function inputSelect() {

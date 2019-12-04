@@ -1,8 +1,4 @@
 window.onload = function (e) {
-    var lineUserId = "lol";
-    this.getProfile(lineUserId);
-    this.editprofile(lineUserId);
-
     liff.init(function (data) {
         initializeApp(data);
     });
@@ -10,6 +6,8 @@ window.onload = function (e) {
 
 function initializeApp(data) {
     var lineUserId = data.context.userId;
+    this.getProfile(lineUserId);
+    this.editprofile(lineUserId);
 }
 
 function editprofile(lineUserId) {
