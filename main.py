@@ -49,6 +49,44 @@ def comment():
     return render_template()
 # Todo 留言板還沒做(HTML，SQL，Function)
 
+# messaging API
+@app.route("/callback", methods=['POST'])
+def callback():
+    signature = request.headers["X-Line-Signature"]
+
+    body = request.get_data(as_text=True)
+    app.logger.info("Request body: " + body)
+
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+
+    return "OK"
+
+
+@handler.add(MessageEvent, message=TextMessage)
+def message_text(event):
+    if(re.match("^[0-9]*$", event.message.text)):
+        # todo 檢查不存在的號碼 檢查完才查詢
+        userid = event.message.text
+        # user = alchemyFunc.searchUser(userid)
+        # flex = lineModel.flexmessage(user)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                # flex,
+            ]
+        )
+    # elif(event.message.text == "我是誰"):
+
+    else:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text=event.message.text+"(VScode)"),
+                TextSendMessage(text="(傳送的非數字無法查詢)")
+            ]
+        )
+
 
 
 if __name__ == "__main__":

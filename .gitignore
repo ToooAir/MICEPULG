@@ -2,5 +2,5 @@
 *.pyc
 .DS_Store
 /static/uploadImage/
-.vscode
+/.vscode/
 /__pycache__/
