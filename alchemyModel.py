@@ -1,7 +1,7 @@
 from alchemyStart import engine
 
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Text, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
 
 Base = declarative_base()
 
@@ -41,7 +41,7 @@ class Logs(Base):
     line_user_id = Column('line_user_id', String(64))
     comand = Column('comand', String(32))
     content = Column('content', Text)
-    create_time = Column('create_time', TIMESTAMP)
+    create_time = Column('create_time', Float)
     ip = Column('ip', String(40))
     spend_ms = Column('spend_ms', Integer)
 
@@ -50,7 +50,7 @@ class Followers(Base):
     __tablename__ = 'followers'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     line_user_id = Column('line_user_id', String(64))
-    create_time = Column('create_time', TIMESTAMP)
+    create_time = Column('create_time', Float)
 
 
 Base.metadata.create_all(engine)

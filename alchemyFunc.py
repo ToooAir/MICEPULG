@@ -1,5 +1,6 @@
 from alchemyStart import DB_session
-from alchemyModel import User
+from alchemyModel import User,Followers,Logs
+from time import time
 
 
 def addUser(lineUserId, name, email, intro, link, picture):
@@ -9,6 +10,7 @@ def addUser(lineUserId, name, email, intro, link, picture):
     session.add(user)
     session.commit()
     session.close()
+
 
 def editUser(lineUserId, name, email, intro, link, picture):
     session = DB_session()
@@ -20,9 +22,6 @@ def editUser(lineUserId, name, email, intro, link, picture):
     user.picture = picture
     session.commit()
     session.close()
-
-
-# addUser("lol","家豪","家豪的信箱","家豪的自我介紹","家豪的連結","家豪的照片")
 
 
 def bindUser(bindId, lineUserId):
@@ -58,15 +57,46 @@ def getProfile(lineUserId):
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     session.close()
     profileJson = {
+        "id":user.id,
         "name":user.name,
         "email":user.email,
         "intro":user.intro,
         "link":user.link
     }
     return profileJson
+
+def findSomeone(id):
+    session = DB_session()
+    user = session.query(User).filter(User.id == id).first()
+    session.close()
+    profileJson = {
+        "id":user.id,
+        "name":user.name,
+        "email":user.email,
+        "intro":user.intro,
+        "link":user.link,
+        "picture":user.picture
+    }
+    return profileJson
+
     
 def getPicture(lineUserId):
     session = DB_session()
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     session.close()
     return str(user.picture)
+
+def addFollow(lineUserId,followTs):
+    session = DB_session()
+    follow = Followers(line_user_id=lineUserId,create_time=followTs)
+    session.add(follow)
+    session.commit()
+    session.close()
+
+def addLogs(lineUserId,comand,content,callTs,ip):
+    session = DB_session()
+    spend = round((time() - callTs)*1000)
+    log = Logs(line_user_id=lineUserId,comand=comand,content=content,create_time=callTs,ip=ip,spend_ms=spend)
+    session.add(log)
+    session.commit()
+    session.close()

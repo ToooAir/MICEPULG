@@ -37,11 +37,13 @@ function login(lineUserId) {
             dataType: "json",
             success: function (data) {
                 alert(data);
+                liff.closeWindow();
             },
             error: function (jqXHR) {
                 alert("error: " + jqXHR.responseText);
             }
-        })
+        });
+
     });
 }
 

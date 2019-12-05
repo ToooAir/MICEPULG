@@ -1,6 +1,8 @@
 from config import config
 import alchemyFunc
 
+from time import time
+from json import loads as json_load
 import os
 import sys
 import re
@@ -9,7 +11,7 @@ from uuid import uuid1
 
 from argparse import ArgumentParser
 
-from flask import Flask, request, abort, render_template, send_from_directory, make_response
+from flask import Flask, request, abort, render_template, send_from_directory, make_response, g
 import json
 
 from linebot import (
@@ -19,7 +21,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
+    MessageEvent, FollowEvent, PostbackEvent, TextMessage, TextSendMessage, FlexSendMessage
 )
 
 # config
@@ -28,6 +30,11 @@ handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
 imageSaveDir = 'static/uploadImage/'
 
 app = Flask(__name__)
+
+
+@app.before_request
+def before_req():
+    g.startTime = time()
 
 # website
 @app.route("/login", methods=["GET"])
@@ -76,7 +83,9 @@ def bind():
         resp = make_response(json.dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
-
+    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['main'])
+    alchemyFunc.addLogs(lineUserId, "bind", "", g.startTime,
+                        request.headers['X-Forwarded-For'])
     return resp
 
 
@@ -100,7 +109,9 @@ def register():
     resp = make_response(json.dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
-
+    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['main'])
+    alchemyFunc.addLogs(lineUserId, "register", "", g.startTime,
+                        request.headers['X-Forwarded-For'])
     return resp
 
 
@@ -113,18 +124,20 @@ def editprofile():
     intro = data["intro"]
     link = data["link"]
     image = request.files["images"]
-    
+
     filename = alchemyFunc.getPicture(lineUserId)
     if(image.filename != ""):
-        if(os.path.isfile(imageSaveDir+filename)):
-            os.remove(imageSaveDir+filename)
+        # if(os.path.isfile(imageSaveDir+filename)):
+        #     os.remove(imageSaveDir+filename)
         filename = str(uuid1()) + "." + image.filename.split(".")[-1]
         image.save(os.path.join(imageSaveDir, filename))
 
-    alchemyFunc.editUser(lineUserId,name,email,intro,link,filename)
+    alchemyFunc.editUser(lineUserId, name, email, intro, link, filename)
     resp = make_response(json.dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
+    alchemyFunc.addLogs(lineUserId, "edit", "", g.startTime,
+                        request.headers['X-Forwarded-For'])
     return resp
 
 
@@ -157,25 +170,53 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    if(re.match("^[0-9]*$", event.message.text)):
-        # todo 檢查不存在的號碼 檢查完才查詢
-        userid = event.message.text
-        # user = alchemyFunc.searchUser(userid)
-        # flex = lineModel.flexmessage(user)
+    lineUserId = event.source.user_id
+    text = event.message.text
+    if((text.index("要") == 1) and (text.index("#") == 3)):
+        find = text.split("#")[1].split("號")
+        user = alchemyFunc.findSomeone(find)
+        picture = config['domain']+imageSaveDir+user["picture"]
+        flex = json_load(render_template(
+            'Find.json', user=user, picture=picture), strict=False)
         line_bot_api.reply_message(
             event.reply_token, [
-                # flex,
+                FlexSendMessage(alt_text=text, contents=flex)
             ]
         )
-    # elif(event.message.text == "我是誰"):
-
+        alchemyFunc.addLogs(lineUserId, "find", "", g.startTime,
+                        request.headers['X-Forwarded-For'])
     else:
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text=event.message.text+"(VScode)"),
-                TextSendMessage(text="(傳送的非數字無法查詢)")
+                TextSendMessage(text=event.message.text+"(VScode)")
             ]
         )
+
+
+@handler.add(FollowEvent)
+def handleFollow(event):
+    lineUserId = event.source.user_id
+    alchemyFunc.addFollow(lineUserId, g.startTime)
+    alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime,
+                        request.headers['X-Forwarded-For'])
+
+
+@handler.add(PostbackEvent)
+def handlePostback(event):
+    lineUserId = event.source.user_id
+    text = event.postback.data
+    if(text == "我是誰"):
+        user = alchemyFunc.getProfile(lineUserId)
+        filename = alchemyFunc.getPicture(lineUserId)
+        picture = config['domain']+imageSaveDir+filename
+        flex = json_load(render_template(
+            'Me.json', user=user, picture=picture), strict=False)
+        line_bot_api.reply_message(
+            event.reply_token,
+            FlexSendMessage(alt_text=text, contents=flex)
+        )
+        alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
+                            request.headers['X-Forwarded-For'])
 
 
 if __name__ == "__main__":

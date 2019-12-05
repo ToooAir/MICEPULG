@@ -25,11 +25,12 @@ function editprofile(lineUserId) {
             contentType: false,
             success: function (data) {
                 alert(data);
+                liff.closeWindow();
             },
             error: function (jqXHR) {
                 alert("error: " + jqXHR.responseText);
             }
-        })
+        });
     });
 }
 

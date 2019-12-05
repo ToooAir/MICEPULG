@@ -8,9 +8,13 @@ config = {
         'password': 'linepw',
         'host': 'localhost',
         'database': 'lineDB'
-    }
+    },
+    'richmenu': {
+        'login': 'richmenu-9664fc92d37d642a0a3c1e1fec9b0f57',
+        'main': 'richmenu-2e8b087eb27de1b54b1cf9dd38a44e2f'
+    },
+    'domain':'https://37b25497.ngrok.io/'
 }
 
 SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}/{}?charset=utf8".format(
     config['mysql']['dialect'], config['mysql']['driver'], config['mysql']['username'], config['mysql']['password'], config['mysql']['host'], config['mysql']['database'])
-
