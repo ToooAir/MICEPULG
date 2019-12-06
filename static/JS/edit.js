@@ -20,11 +20,9 @@ function editprofile(lineUserId) {
             cache: false,
             data: data,
             url: "/editprofile",
-            dataType: "formData",
             processData: false,
             contentType: false,
             success: function (data) {
-                alert(data);
                 liff.closeWindow();
             },
             error: function (jqXHR) {

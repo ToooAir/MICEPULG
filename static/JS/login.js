@@ -36,7 +36,6 @@ function login(lineUserId) {
             url: "/bind",
             dataType: "json",
             success: function (data) {
-                alert(data);
                 liff.closeWindow();
             },
             error: function (jqXHR) {

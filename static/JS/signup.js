@@ -19,7 +19,6 @@ function singUp(lineUserId) {
             cache: false,
             data: data,
             url: "/register",
-            dataType: "formData",
             processData: false,
             contentType: false,
             success: function (data) {

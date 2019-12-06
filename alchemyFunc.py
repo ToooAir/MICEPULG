@@ -1,5 +1,5 @@
 from alchemyStart import DB_session
-from alchemyModel import User,Followers,Logs
+from alchemyModel import User, Followers, Logs, Comment
 from time import time
 
 
@@ -57,46 +57,70 @@ def getProfile(lineUserId):
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     session.close()
     profileJson = {
-        "id":user.id,
-        "name":user.name,
-        "email":user.email,
-        "intro":user.intro,
-        "link":user.link
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "intro": user.intro,
+        "link": user.link
     }
     return profileJson
+
 
 def findSomeone(id):
     session = DB_session()
     user = session.query(User).filter(User.id == id).first()
     session.close()
     profileJson = {
-        "id":user.id,
-        "name":user.name,
-        "email":user.email,
-        "intro":user.intro,
-        "link":user.link,
-        "picture":user.picture
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "intro": user.intro,
+        "link": user.link,
+        "picture": user.picture
     }
     return profileJson
 
-    
+
 def getPicture(lineUserId):
     session = DB_session()
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     session.close()
     return str(user.picture)
 
-def addFollow(lineUserId,followTs):
+
+def getComments(lineUserId):
     session = DB_session()
-    follow = Followers(line_user_id=lineUserId,create_time=followTs)
+    comment = session.query(Comment).filter(Comment.receiver == lineUserId).all()
+    for c in comment :
+        print(c.sender,c.content,c.user.name)
+    session.close()
+
+getComments("lol")
+
+
+def addComments(sender, receiver, content):
+    session = DB_session()
+    ts = time()
+    comment = Comment(create_time=ts, sender=sender,
+                      receiver=receiver, content=content)
+    session.add(comment)
+    session.commit()
+    session.close()
+
+
+def addFollow(lineUserId, followTs):
+    session = DB_session()
+    follow = Followers(line_user_id=lineUserId, create_time=followTs)
     session.add(follow)
     session.commit()
     session.close()
 
-def addLogs(lineUserId,comand,content,callTs,ip):
+
+def addLogs(lineUserId, comand, content, callTs, ip):
     session = DB_session()
     spend = round((time() - callTs)*1000)
-    log = Logs(line_user_id=lineUserId,comand=comand,content=content,create_time=callTs,ip=ip,spend_ms=spend)
+    log = Logs(line_user_id=lineUserId, comand=comand,
+               content=content, create_time=callTs, ip=ip, spend_ms=spend)
     session.add(log)
     session.commit()
     session.close()

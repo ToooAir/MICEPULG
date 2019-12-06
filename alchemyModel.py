@@ -1,7 +1,8 @@
 from alchemyStart import engine
 
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -10,12 +11,13 @@ class User(Base):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     bind_id = Column('bind_id', String(4))
-    line_user_id = Column('line_user_id', String(64))
+    line_user_id = Column('line_user_id', String(64),unique=True)
     name = Column('name', String(10))
     email = Column('email', String(30))
     intro = Column('intro', Text)
     link = Column('link', Text)
     picture = Column('picture', String(64))
+    comment = relationship("Comment", backref="user")
 
 
 class UserDetail(Base):
@@ -51,6 +53,15 @@ class Followers(Base):
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     line_user_id = Column('line_user_id', String(64))
     create_time = Column('create_time', Float)
+
+
+class Comment(Base):
+    __tablename__ = 'comment'
+    id = Column('id', Integer, primary_key=True, autoincrement=True)
+    create_time = Column('create_time', Float)
+    sender = Column('sender', String(64), ForeignKey('user.line_user_id'))
+    receiver = Column('receiver', String(64))
+    content = Column('content', Text)
 
 
 Base.metadata.create_all(engine)
