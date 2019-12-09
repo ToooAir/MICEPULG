@@ -62,7 +62,7 @@
         "contents": [
           {
             "type": "text",
-            "text": "{{user.intro}}",
+            "text": " {{user.intro}}",
             "size": "sm",
             "wrap": true
           }

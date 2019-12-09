@@ -1,5 +1,5 @@
 from alchemyStart import DB_session
-from alchemyModel import User, UserDetail, Followers, Logs, Comment
+from alchemyModel import User, UserDetail, Tags, Comment, Followers, Logs
 from sqlalchemy.sql.expression import func
 from time import time
 from datetime import datetime
@@ -20,21 +20,24 @@ def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture
     session.commit()
     session.close()
 
-def importUser(bindId, name, email, job, intro, link, tag1, tag2, tag3, picture):
+
+def importUser(bindId, name, email, job, intro, link, tag1, tag2, tag3, picture, ticket, qrcode=None):
     session = DB_session()
     addUser = User(bind_id=bindId, name=name, email=email,
-                   intro=intro, link=link, picture=picture)
+                   intro=intro, link=link, picture=picture, qrcode=qrcode)
     session.add(addUser)
     session.commit()
     user = session.query(User).filter(User.bind_id == bindId).first()
     id = user.id
     detail = UserDetail(user_id=id, field_a=job,
                         field_b=tag1, field_c=tag2, field_d=tag3)
+    tags = Tags(user_id=id, tag_name="ticket", tag_value=ticket)
     session.add(detail)
+    session.add(tags)
     session.commit()
     session.close()
 
-# importUser("5487","真C折","karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg")
+# importUser("5487","真C折","karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg","超級大佬","201911041604381349845222")
 
 
 def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
@@ -53,7 +56,7 @@ def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, pictur
     detail.tag3 = tag3
     session.commit()
     session.close()
-
+    
 
 def deleteUser(lineUserId):
     session = DB_session()
@@ -108,7 +111,7 @@ def getProfile(lineUserId):
         "tag1": detail.field_b,
         "tag2": detail.field_c,
         "tag3": detail.field_d,
-        "qrcode":user.qrcode
+        "qrcode": user.qrcode
     }
     return profileJson
 
@@ -132,6 +135,7 @@ def findSomeone(id):
         "tag3": detail.field_d
     }
     return profileJson
+
 
 def getPicture(lineUserId):
     session = DB_session()
