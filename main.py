@@ -2,6 +2,7 @@ import alchemyFunc
 from config import config
 
 from time import time
+from datetime import datetime
 from argparse import ArgumentParser
 from os import path as os_path, remove as os_remove
 from json import loads as json_load, dumps as json_dumps
@@ -55,14 +56,15 @@ def find():
 
 @app.route("/comment", methods=["GET"])
 def comment():
-    return render_template()
+    id = request.args.get('id')
+    name = alchemyFunc.findSomeone(id)["name"]
+    output = alchemyFunc.getComments(id)
+    return render_template("comment.html", name=name, output=output)
 
 
 @app.route("/static/<path:path>")
 def send_static(path):
     return send_from_directory("static", path)
-
-# Todo 留言板還沒做(HTML，SQL，Function)
 
 # AJAX
 @app.route("/bind", methods=["POST"])
@@ -81,7 +83,7 @@ def bind():
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
-    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['main'])
+    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
 
     alchemyFunc.addLogs(lineUserId, "bind", "", g.startTime,
                         request.headers['X-Forwarded-For'])
@@ -95,8 +97,12 @@ def register():
     lineUserId = data["lineUserId"]
     name = data["name"]
     email = data["email"]
+    job = data["job"]
     intro = data["intro"]
     link = data["link"]
+    tag1 = data["tag1"]
+    tag2 = data["tag2"]
+    tag3 = data["tag3"]
     image = request.files["images"]
 
     if(image.filename != ""):
@@ -104,13 +110,13 @@ def register():
         image.save(os_path.join(imageSaveDir, filename))
     else:
         filename = "default.jpg"
-    alchemyFunc.addUser(lineUserId, name, email, intro, link, filename)
+    alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
 
     resp = make_response(json_dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
-    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['main'])
+    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
     alchemyFunc.addLogs(lineUserId, "register", "", g.startTime,
                         request.headers['X-Forwarded-For'])
 
@@ -123,8 +129,12 @@ def editprofile():
     lineUserId = data["lineUserId"]
     name = data["name"]
     email = data["email"]
+    job = data["job"]
     intro = data["intro"]
     link = data["link"]
+    tag1 = data["tag1"]
+    tag2 = data["tag2"]
+    tag3 = data["tag3"]
     image = request.files["images"]
 
     filename = alchemyFunc.getPicture(lineUserId)
@@ -134,7 +144,7 @@ def editprofile():
         filename = str(uuid1()) + "." + image.filename.split(".")[-1]
         image.save(os_path.join(imageSaveDir, filename))
 
-    alchemyFunc.editUser(lineUserId, name, email, intro, link, filename)
+    alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
     resp = make_response(json_dumps(name))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
@@ -155,6 +165,35 @@ def getprofile():
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
+
+
+@app.route("/addcomment", methods=["POST"])
+def addComment():
+    data = request.form
+    lineUserId = data["lineUserId"]
+    id = data["id"]
+    comment = data["comment"]
+    ts = int(time())
+
+    alchemyFunc.addComments(lineUserId, id, comment, ts)
+
+    name = alchemyFunc.getName(lineUserId)
+    sendTime = datetime.fromtimestamp(
+        ts).strftime('%Y-%m-%d %H:%M:%S')
+    data = {
+        "name": name,
+        "time": sendTime
+    }
+
+    alchemyFunc.addLogs(lineUserId, "addcomment", "", g.startTime,
+                                request.headers['X-Forwarded-For'])
+
+    resp = make_response(json_dumps(data))
+    resp.status_code = 200
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    return resp
+
 
 # messaging API
 @app.route("/callback", methods=["POST"])
@@ -177,27 +216,64 @@ def message_text(event):
     lineUserId = event.source.user_id
     text = event.message.text
 
-    if((text.index("要") == 1) and (text.index("#") == 3)):
-        find = text.split("#")[1].split("號")
+    if(text.find("我要找#") != -1):
+        try:
+            find = text.split("#")[1].split("號")[0]
+            user = alchemyFunc.findSomeone(find)
+            if(user["picture"].find("http")==-1):
+                picture = config['domain']+imageSaveDir+user["picture"]
+            else:
+                picture = user["picture"]
 
-        user = alchemyFunc.findSomeone(find)
-        picture = config['domain']+imageSaveDir+user["picture"]
+            flex = json_load(render_template(
+                'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    FlexSendMessage(alt_text=text, contents=flex)
+                ]
+            )
+            alchemyFunc.addLogs(lineUserId, "find", "", g.startTime,
+                                request.headers['X-Forwarded-For'])
+        except:
+            line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text="查無此人")
+                ]
+            )
+
+    elif(text == "修改成功"):
+        user = alchemyFunc.getProfile(lineUserId)
+
+        if(user["picture"].find("http")==-1):
+            picture = config['domain']+imageSaveDir+user["picture"]
+        else:
+            picture = user["picture"]
 
         flex = json_load(render_template(
-            'Find.json', user=user, picture=picture), strict=False)
+            'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
+        line_bot_api.reply_message(
+            event.reply_token,
+            FlexSendMessage(alt_text=text, contents=flex)
+        )
+
+    elif(text == "/reset"):
+        alchemyFunc.deleteUser(lineUserId)
+
+        line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['login'])
         line_bot_api.reply_message(
             event.reply_token, [
-                FlexSendMessage(alt_text=text, contents=flex)
+                TextSendMessage(text="已重置")
             ]
         )
 
-        alchemyFunc.addLogs(lineUserId, "find", "", g.startTime,
-                        request.headers['X-Forwarded-For'])
+        alchemyFunc.addLogs(lineUserId, "reset", "", g.startTime,
+                                request.headers['X-Forwarded-For'])
 
     else:
+        
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text=event.message.text+"(VScode)")
+                TextSendMessage(text="機器人很笨不懂你在說什麼")
             ]
         )
 
@@ -205,6 +281,11 @@ def message_text(event):
 @handler.add(FollowEvent)
 def handleFollow(event):
     lineUserId = event.source.user_id
+    line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text="歡迎加入")
+            ]
+        )
     alchemyFunc.addFollow(lineUserId, g.startTime)
     alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime,
                         request.headers['X-Forwarded-For'])
@@ -215,18 +296,55 @@ def handlePostback(event):
     lineUserId = event.source.user_id
     text = event.postback.data
 
-    if(text == "我是誰"):
+    if(text == "個人資料"):
+
         user = alchemyFunc.getProfile(lineUserId)
-        filename = alchemyFunc.getPicture(lineUserId)
-        picture = config['domain']+imageSaveDir+filename
+
+        if(user["picture"].find("http")==-1):
+            picture = config['domain']+imageSaveDir+user["picture"]
+        else:
+            picture = user["picture"]
 
         flex = json_load(render_template(
-            'Me.json', user=user, picture=picture), strict=False)
+            'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
         line_bot_api.reply_message(
             event.reply_token,
             FlexSendMessage(alt_text=text, contents=flex)
         )
-        
+
+        alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
+                            request.headers['X-Forwarded-For'])
+
+    elif(text == "抽卡"):
+
+        user = alchemyFunc.drawCard()
+
+        if(user["picture"].find("http")==-1):
+            picture = config['domain']+imageSaveDir+user["picture"]
+        else:
+            picture = user["picture"]
+
+        flex = json_load(render_template(
+            'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                FlexSendMessage(alt_text=text, contents=flex)
+            ]
+        )
+
+        alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
+                            request.headers['X-Forwarded-For'])
+
+    elif(text == "活動資訊"):
+
+        flex = json_load(render_template(
+            'Event.json'), strict=False)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                FlexSendMessage(alt_text=text, contents=flex)
+            ]
+        )
+
         alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
                             request.headers['X-Forwarded-For'])
 

@@ -1,0 +1,148 @@
+curl -v -X POST https://api.line.me/v2/bot/richmenu \
+-H 'Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+-H 'Content-Type: application/json' \
+-d \
+'{
+    "size": {
+      "width": 2500,
+      "height": 1686
+    },
+    "selected": false,
+    "name": "menu",
+    "chatBarText": "主選單",
+    "areas": [
+      {
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "postback",
+          "data": "個人資料",
+          "displayText": "個人資料"
+        }
+      },
+      {
+        "bounds": {
+          "x": 833,
+          "y": 0,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "postback",
+          "data": "活動資訊",
+          "displayText": "活動資訊"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1666,
+          "y": 0,
+          "width": 834,
+          "height": 843
+        },
+        "action": {
+          "type": "uri",
+          "label": "Find",
+          "uri": "line://app/1653599527-pVnjrOek"
+        }
+      },
+      {
+        "bounds": {
+          "x": 0,
+          "y": 843,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "uri",
+          "label": "QA",
+          "uri": "https://haoqi.one/tgif_slido"
+        }
+      },
+      {
+        "bounds": {
+          "x": 833,
+          "y": 843,
+          "width": 833,
+          "height": 843
+        },
+        "action": {
+          "type": "uri",
+          "label": "collect",
+          "uri": "https://line.me/R/ch/1432061434/234mvgki?us=LINE&um=ClientOA&uca=Richmenu"
+        }
+      },
+      {
+        "bounds": {
+          "x": 1666,
+          "y": 843,
+          "width": 834,
+          "height": 843
+        },
+        "action": {
+          "type": "postback",
+          "data": "抽卡",
+          "displayText": "抽卡"
+        }
+      }
+   ]
+}'
+
+return {"richMenuId":"richmenu-8e81db4e38d5e643d8152b92693ebb48"}
+
+curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-8e81db4e38d5e643d8152b92693ebb48/content \
+-H "Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+-H 'Content-Type: application/json" \
+-H "Content-Type: image/png" \
+-T /Users/toooair/Downloads/menu.png
+
+return {}
+
+postman
+curl -v -X POST https://api.line.me/v2/bot/user/all/richmenu/richmenu-8e81db4e38d5e643d8152b92693ebb48 \
+-H "Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU="
+
+return {}
+
+-----------------------------------login
+
+curl -v -X POST https://api.line.me/v2/bot/richmenu \
+-H 'Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+-H 'Content-Type: application/json' \
+-d \
+'{
+    "size": {
+      "width": 2500,
+      "height": 843
+    },
+    "selected": false,
+    "name": "login",
+    "chatBarText": "Welcome",
+    "areas": [
+      {
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 2500,
+          "height": 843
+        },
+        "action": {
+          "type": "uri",
+          "label": "login",
+          "uri": "line://app/1653599527-KjlZpO3N"
+        }
+      }
+   ]
+}'
+
+{"richMenuId":"richmenu-1b9f083db5ccd8a902ce7254335ceb7c"}
+
+curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-1b9f083db5ccd8a902ce7254335ceb7c/content \
+-H "Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+-H 'Content-Type: application/json" \
+-H "Content-Type: image/png" \
+-T /Users/toooair/Downloads/login.png

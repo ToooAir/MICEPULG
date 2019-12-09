@@ -1,0 +1,162 @@
+{
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "標題",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "size": "full",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "第一段內容"
+          },
+          {
+            "type": "text",
+            "text": "活動介紹一",
+            "weight": "regular",
+            "size": "sm",
+            "wrap": true,
+            "contents": [
+              {
+                "type": "span",
+                "text": "第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容",
+                "size": "xxs"
+              }
+            ]
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "點我看更多",
+              "uri": "http://linecorp.com/"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "標題",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "size": "full",
+        "aspectMode": "cover",
+        "aspectRatio": "320:213"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "第一段內容"
+          },
+          {
+            "type": "text",
+            "text": "活動介紹一",
+            "weight": "regular",
+            "size": "sm",
+            "wrap": true,
+            "contents": [
+              {
+                "type": "span",
+                "text": "第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容",
+                "size": "xxs"
+              }
+            ]
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "點我看更多",
+              "uri": "http://linecorp.com/"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    }
+  ]
+}
+

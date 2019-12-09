@@ -1,25 +1,64 @@
 from alchemyStart import DB_session
-from alchemyModel import User, Followers, Logs, Comment
+from alchemyModel import User, UserDetail, Followers, Logs, Comment
+from sqlalchemy.sql.expression import func
 from time import time
+from datetime import datetime
+from random import random
 
 
-def addUser(lineUserId, name, email, intro, link, picture):
+def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
     session = DB_session()
-    user = User(line_user_id=lineUserId, name=name, email=email,
-                intro=intro, link=link, picture=picture)
-    session.add(user)
+    addUser = User(line_user_id=lineUserId, name=name, email=email,
+                   intro=intro, link=link, picture=picture)
+    session.add(addUser)
+    session.commit()
+    user = session.query(User).filter(User.line_user_id == lineUserId).first()
+    id = user.id
+    detail = UserDetail(user_id=id, field_a=job,
+                        field_b=tag1, field_c=tag2, field_d=tag3)
+    session.add(detail)
     session.commit()
     session.close()
 
+def importUser(bindId, name, email, job, intro, link, tag1, tag2, tag3, picture):
+    session = DB_session()
+    addUser = User(bind_id=bindId, name=name, email=email,
+                   intro=intro, link=link, picture=picture)
+    session.add(addUser)
+    session.commit()
+    user = session.query(User).filter(User.bind_id == bindId).first()
+    id = user.id
+    detail = UserDetail(user_id=id, field_a=job,
+                        field_b=tag1, field_c=tag2, field_d=tag3)
+    session.add(detail)
+    session.commit()
+    session.close()
 
-def editUser(lineUserId, name, email, intro, link, picture):
+# importUser("5487","真C折","karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg")
+
+
+def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
     session = DB_session()
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     user.name = name
     user.email = email
+    user.job = job
     user.intro = intro
     user.link = link
     user.picture = picture
+    detail = session.query(UserDetail).filter(
+        UserDetail.user_id == user.id).first()
+    detail.tag1 = tag1
+    detail.tag2 = tag2
+    detail.tag3 = tag3
+    session.commit()
+    session.close()
+
+
+def deleteUser(lineUserId):
+    session = DB_session()
+    user = session.query(User).filter(User.line_user_id == lineUserId).first()
+    session.delete(user)
     session.commit()
     session.close()
 
@@ -55,13 +94,21 @@ def checkNonExist(bindId):
 def getProfile(lineUserId):
     session = DB_session()
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
+    detail = session.query(UserDetail).filter(
+        UserDetail.user_id == user.id).first()
     session.close()
     profileJson = {
         "id": user.id,
         "name": user.name,
         "email": user.email,
+        "job": detail.field_a,
         "intro": user.intro,
-        "link": user.link
+        "link": user.link,
+        "picture": user.picture,
+        "tag1": detail.field_b,
+        "tag2": detail.field_c,
+        "tag3": detail.field_d,
+        "qrcode":user.qrcode
     }
     return profileJson
 
@@ -69,17 +116,22 @@ def getProfile(lineUserId):
 def findSomeone(id):
     session = DB_session()
     user = session.query(User).filter(User.id == id).first()
+    detail = session.query(UserDetail).filter(
+        UserDetail.user_id == user.id).first()
     session.close()
     profileJson = {
         "id": user.id,
         "name": user.name,
         "email": user.email,
+        "job": detail.field_a,
         "intro": user.intro,
         "link": user.link,
-        "picture": user.picture
+        "picture": user.picture,
+        "tag1": detail.field_b,
+        "tag2": detail.field_c,
+        "tag3": detail.field_d
     }
     return profileJson
-
 
 def getPicture(lineUserId):
     session = DB_session()
@@ -88,19 +140,34 @@ def getPicture(lineUserId):
     return str(user.picture)
 
 
-def getComments(lineUserId):
+def getName(lineUserId):
     session = DB_session()
-    comment = session.query(Comment).filter(Comment.receiver == lineUserId).all()
-    for c in comment :
-        print(c.sender,c.content,c.user.name)
+    user = session.query(User).filter(User.line_user_id == lineUserId).first()
     session.close()
+    return str(user.name)
 
-getComments("lol")
 
-
-def addComments(sender, receiver, content):
+def getComments(id):
     session = DB_session()
-    ts = time()
+    user = session.query(User).filter(User.id == id).first()
+    lineUserId = user.line_user_id
+    comments = session.query(Comment).filter(
+        Comment.receiver == lineUserId).all()
+    output = []
+    for c in comments:
+        time = datetime.fromtimestamp(
+            c.create_time).strftime('%Y-%m-%d %H:%M:%S')
+        output.append(
+            {"name": c.user.name, "time": time, "content": c.content})
+        print(c.create_time)
+    session.close()
+    return output
+
+
+def addComments(sender, receiver_id, content, ts):
+    session = DB_session()
+    user = session.query(User).filter(User.id == receiver_id).first()
+    receiver = user.line_user_id
     comment = Comment(create_time=ts, sender=sender,
                       receiver=receiver, content=content)
     session.add(comment)
@@ -124,3 +191,24 @@ def addLogs(lineUserId, comand, content, callTs, ip):
     session.add(log)
     session.commit()
     session.close()
+
+
+def drawCard():
+    session = DB_session()
+    user = session.query(User).order_by(func.rand()).first()
+    detail = session.query(UserDetail).filter(
+        UserDetail.user_id == user.id).first()
+    session.close()
+    profileJson = {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "job": detail.field_a,
+        "intro": user.intro,
+        "link": user.link,
+        "picture": user.picture,
+        "tag1": detail.field_b,
+        "tag2": detail.field_c,
+        "tag3": detail.field_d
+    }
+    return profileJson

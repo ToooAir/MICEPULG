@@ -11,22 +11,27 @@ class User(Base):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     bind_id = Column('bind_id', String(4))
-    line_user_id = Column('line_user_id', String(64),unique=True)
+    line_user_id = Column('line_user_id', String(64), unique=True)
     name = Column('name', String(10))
     email = Column('email', String(30))
     intro = Column('intro', Text)
     link = Column('link', Text)
     picture = Column('picture', String(64))
-    comment = relationship("Comment", backref="user")
+    comment = relationship("Comment", backref="user", lazy='dynamic',
+                           cascade='all, delete-orphan', passive_deletes=True)
+    qrcode = Column('qrcode', String(32))
 
 
 class UserDetail(Base):
     __tablename__ = 'user_detail'
+    id = Column('id', Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey(
-        'user.id', ondelete='CASCADE'), primary_key=True)
-    field_a = Column('Field_a', Text)
-    field_b = Column('Field_b', Text)
-    field_c = Column('Field_c', Text)
+        'user.id', ondelete='CASCADE'))
+    field_a = Column('field_a', Text)
+    field_b = Column('field_b', Text)
+    field_c = Column('field_c', Text)
+    field_d = Column('field_d', Text)
+    field_e = Column('field_e', Text)
 
 
 class Tags(Base):
@@ -43,7 +48,7 @@ class Logs(Base):
     line_user_id = Column('line_user_id', String(64))
     comand = Column('comand', String(32))
     content = Column('content', Text)
-    create_time = Column('create_time', Float)
+    create_time = Column('create_time', Integer)
     ip = Column('ip', String(40))
     spend_ms = Column('spend_ms', Integer)
 
@@ -52,14 +57,15 @@ class Followers(Base):
     __tablename__ = 'followers'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     line_user_id = Column('line_user_id', String(64))
-    create_time = Column('create_time', Float)
+    create_time = Column('create_time', Integer)
 
 
 class Comment(Base):
     __tablename__ = 'comment'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
-    create_time = Column('create_time', Float)
-    sender = Column('sender', String(64), ForeignKey('user.line_user_id'))
+    create_time = Column('create_time', Integer)
+    sender = Column('sender', String(64), ForeignKey(
+        'user.line_user_id', ondelete="CASCADE"))
     receiver = Column('receiver', String(64))
     content = Column('content', Text)
 

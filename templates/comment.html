@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>留言</title>
 </head>
+
 <body>
-    
+    <div>
+        <h1 id="name">{{name}}的留言板</h1>
+    </div>
+    <div id="comment_list">
+            {%for c in output%}
+            <div><label>{{c["name"]}} {{c["time"]}} {{c["content"]}}</label></div>
+            {%endfor%}
+    </div>
+    <div>
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea><br>
+        <button id="send">送出</button>
+    </div>
+
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -16,5 +30,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+    <script src="/static/JS/comment.js"></script>
 </body>
+
 </html>

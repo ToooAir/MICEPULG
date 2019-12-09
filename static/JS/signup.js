@@ -13,7 +13,6 @@ function singUp(lineUserId) {
     $("#send").click(function () {
         data = new FormData($("#signupForm")[0]);
         data.append("lineUserId", lineUserId);
-        window.alert(lineUserId);
         $.ajax({
             type: "POST",
             cache: false,

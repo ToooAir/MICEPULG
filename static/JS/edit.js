@@ -14,7 +14,6 @@ function editprofile(lineUserId) {
     $("#send").click(function () {
         data = new FormData($("#editForm")[0]);
         data.append("lineUserId", lineUserId);
-        window.alert(lineUserId);
         $.ajax({
             type: "POST",
             cache: false,
@@ -23,6 +22,12 @@ function editprofile(lineUserId) {
             processData: false,
             contentType: false,
             success: function (data) {
+                liff.sendMessages([
+                    {
+                      type:'text',
+                      text:'修改成功'
+                    }
+                  ]);
                 liff.closeWindow();
             },
             error: function (jqXHR) {
@@ -41,11 +46,16 @@ function getProfile(lineUserId) {
         },
         url: "/getprofile",
         dataType: "json",
-        success: function (response) {
-            $("#editName").val(response["name"]);
-            $("#editEmail").val(response["email"]);
-            $("#editIntro").val(response["intro"]);
-            $("#editLink").val(response["link"]);
+        success: function (data) {
+            $("#editName").val(data["name"]);
+            $("#editEmail").val(data["email"]);
+            $("#editJob").val(data["job"]);
+            $("#editIntro").val(data["intro"]);
+            $("#editLink").val(data["link"]);
+            $("#editTag1").val(data["tag1"]);
+            $("#editTag2").val(data["tag2"]);
+            $("#editTag3").val(data["tag3"]);
+            $("#previewIMG").attr("src","/static/uploadImage/"+data["picture"]);
         },
         error: function (jqXHR) {
             alert("error: " + jqXHR.responseText);

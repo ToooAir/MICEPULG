@@ -5,6 +5,40 @@ window.onload = function (e) {
 };
 
 function initializeApp(data) {
+    var lineUserId = data.context.userId;
+    id = getId();
+    addComment(lineUserId, id);
+}
+
+function addComment(lineUserId, id) {
+    $("#send").click(function () {
+        const input = $('#comment').val();
+        data = {
+            lineUserId: lineUserId,
+            id: id,
+            comment: input,
+        };
+        $.ajax({
+            type: "POST",
+            cache: false,
+            data: data,
+            url: "/addcomment",
+            dataType: "json",
+            success: function (data) {
+                name = data["name"];
+                time = data["time"];
+                const result = "<div><label>" + name + " " + time + " " + input + "</label></div >";
+                $('#comment').val('');
+                $('#comment_list').append(result);
+
+            },
+            error: function (jqXHR) {
+                alert("error: " + jqXHR.responseText);
+            }
+        });
+
+    });
+
 }
 
 function getId() {
@@ -17,7 +51,7 @@ function getId() {
 			if (ary[i].split('=')[0] == 'id') {
 				id = ary[i].split('=')[1];
 			}
-		}
-		// document.getElementById("app-redeem").style.backgroundImage = `url('https://mcdapp1.azureedge.net/${id}.jpg')`;
-	}
+        }
+        return id;
+    }
 }

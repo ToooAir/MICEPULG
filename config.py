@@ -10,10 +10,16 @@ config = {
         'database': 'lineDB'
     },
     'richmenu': {
-        'login': 'richmenu-9664fc92d37d642a0a3c1e1fec9b0f57',
-        'main': 'richmenu-2e8b087eb27de1b54b1cf9dd38a44e2f'
+        'login': 'richmenu-1b9f083db5ccd8a902ce7254335ceb7c',
+        'menu': 'richmenu-8e81db4e38d5e643d8152b92693ebb48'
     },
-    'domain':'https://37b25497.ngrok.io/'
+    'liff':{
+        'login':'line://app/1653599527-KjlZpO3N',
+        'edit':'line://app/1653599527-yzVX2E6N',
+        'find':'line://app/1653599527-pVnjrOek',
+        'comment':'line://app/1653599527-WBVGNDYv'
+    },
+    'domain':'https://42ef292e.ngrok.io/'
 }
 
 SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}/{}?charset=utf8".format(

@@ -1,133 +1,138 @@
 {
-    "type": "bubble",
-    "hero": {
-      "type": "image",
-      "url": "{{picture}}",
-      "size": "full",
-      "aspectRatio": "20:13",
-      "aspectMode": "cover",
-      "action": {
-        "type": "uri",
-        "uri": "http://linecorp.com/"
+  "type": "carousel",
+  "contents": [
+    {
+      "type": "bubble",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "{{user.id}}",
+            "weight": "bold",
+            "size": "lg",
+            "align": "center"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "{{picture}}",
+        "size": "full",
+        "aspectRatio": "1:1",
+        "aspectMode": "cover"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "{{user.name}}",
+            "weight": "bold",
+            "size": "xl",
+            "contents": [
+              {
+                "type": "span",
+                "text": "{{user.name}}   ",
+                "weight": "bold"
+              },
+              {
+                "type": "span",
+                "text": "       {{user.job}}",
+                "size": "sm",
+                "weight": "regular",
+                "style": "normal"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "#{{user.tag1}} #{{user.tag2}} #{{user.tag3}}",
+                "size": "sm"
+              }
+            ],
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "text",
+                "text": "{{user.intro}}",
+                "size": "sm",
+                "wrap": true
+              }
+            ],
+            "margin": "md"
+          }
+        ]
+      },
+      "footer": {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "編輯資料",
+              "uri": "{{edit}}"
+            },
+            "style": "primary"
+          },
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "查看留言",
+              "uri": "{{comment}}?id={{user.id}}"
+            },
+            "style": "primary",
+            "color": "#555555"
+          }
+        ],
+        "spacing": "lg"
       }
-    },
-    "body": {
-      "type": "box",
-      "layout": "vertical",
-      "contents": [
-        {
-          "type": "text",
-          "text": "{{user.name}}",
-          "weight": "bold",
-          "size": "xl"
-        },
-        {
-          "type": "box",
-          "layout": "vertical",
-          "margin": "lg",
-          "spacing": "lg",
-          "contents": [
-            {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "xs",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "序號",
-                  "color": "#aaaaaa",
-                  "size": "md",
-                  "flex": 1
-                },
-                {
-                  "type": "text",
-                  "text": "{{user.id}}",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "md",
-                  "flex": 5
-                }
-              ],
-              "margin": "md"
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "email",
-                  "color": "#aaaaaa",
-                  "size": "md",
-                  "flex": 1
-                },
-                {
-                  "type": "text",
-                  "text": "{{user.email}}",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "md",
-                  "flex": 5
-                }
-              ]
-            },
-            {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
-                  "text": "介紹",
-                  "color": "#aaaaaa",
-                  "size": "md",
-                  "flex": 1
-                },
-                {
-                  "type": "text",
-                  "text": "{{user.intro}}",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "md",
-                  "flex": 5
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "footer": {
-      "type": "box",
-      "layout": "horizontal",
-      "spacing": "sm",
-      "contents": [
-        {
-          "type": "button",
-          "style": "link",
-          "height": "sm",
-          "action": {
-            "type": "uri",
-            "label": "Website",
-            "uri": "{{user.link}}"
+    }{% if user.qrcode %},
+    {
+      "type": "bubble",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "報到用 Qrcode",
+            "size": "lg",
+            "weight": "bold",
+            "align": "center"
           }
-        },
-        {
-          "type": "button",
-          "style": "link",
-          "height": "sm",
-          "action": {
-            "type": "uri",
-            "label": "編輯",
-            "uri": "line://app/1653599527-yzVX2E6N"
+        ]
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "image",
+            "url": "https://chart.googleapis.com/chart?chs=500x500&cht=qr&chl={{user.qrcode}}&choe=UTF-8",
+            "size": "full"
+          },
+          {
+            "type": "text",
+            "text": "請於報到處出示此 Qrcode 報到入場",
+            "align": "center"
           }
-        },
-        {
-          "type": "spacer",
-          "size": "sm"
-        }
-      ],
-      "flex": 0
-    }
-  }
+        ]
+      }
+    }{% endif %}
+  ]
+}
+
