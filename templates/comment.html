@@ -11,18 +11,54 @@
 </head>
 
 <body>
-    <div>
-        <h1 id="name">{{name}}的留言板</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 id="name">留言給 {{name}}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <textarea class="form-control" name="comment" id="comment" cols="30" rows="5"></textarea>
+            </div>
+        </div>
+
+        <br>
+        
+        <div class="row">
+            <div class="col-12">
+                <button class="btn btn-primary btn-lg btn-block" id="send">送出</button>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-12">
+                <div id="comment_list" class="list-group">
+                    {%for comment in output%}
+                    <div class="list-group-item">
+                        <div class="justify-content-between d-flex w-100">
+                            <strong class="mb-1">{{comment["name"]}}</strong>
+                            <small>{{comment["time"]}}</small>
+                        </div>
+
+                        <div class="mb-1">
+                            <p>{{comment["content"]}}</p>
+                        </div>
+
+                    </div>
+                    <!-- list-group-item end -->
+                    {%endfor%}
+
+                </div>
+                <!-- comment_list end -->
+
+            </div>
+        </div>
     </div>
-    <div id="comment_list">
-            {%for c in output%}
-            <div><label>{{c["name"]}} {{c["time"]}} {{c["content"]}}</label></div>
-            {%endfor%}
-    </div>
-    <div>
-        <textarea name="comment" id="comment" cols="30" rows="10"></textarea><br>
-        <button id="send">送出</button>
-    </div>
+    
 
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
