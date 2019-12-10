@@ -257,9 +257,12 @@ def message_text(event):
         )
 
     elif(text == "/reset"):
-        alchemyFunc.deleteUser(lineUserId)
+        try:
+            alchemyFunc.deleteUser(lineUserId)
+        finally:
+            pass
 
-        line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['login'])
+        line_bot_api.unlink_rich_menu_from_user(lineUserId)
         line_bot_api.reply_message(
             event.reply_token, [
                 TextSendMessage(text="已重置")
