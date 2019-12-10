@@ -8,33 +8,99 @@
     <title>註冊 | TGIF 臺北設計電波</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
 </head>
 
 <body>
-    <div>
-        <h1>報名</h1>
-        <form id="signupForm" class="submit" encType="multipart/form-data">
-            <input name="name" id="signUpName" placeholder="姓名"><br>
-            <input name="email" id="signUpEmail" type="email" placeholder="信箱"><br>
-            <input name="job" id="signUpJob" placeholder="工作"><br>
-            <textarea name="intro" id="signUpIntro" placeholder="自我介紹" cols="30" rows="10"></textarea><br>
-            <input name="link" id="signUpLink" placeholder="個人作品連結(http://)"><br>
-            <input name="tag1" id="signUpTag1" placeholder="標籤1"><br>
-            <input name="tag2" id="signUpTag2" placeholder="標籤2"><br>
-            <input name="tag3" id="signUpTag3" placeholder="標籤3"><br>
-            <label class="button border black padding opacity round center">
-                <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none"></input>
-                <h7>CHOOSE FILE</h7>
-            </label>
-            <div id="previews">
-                <img id="previewIMG" class="padding" height='200'>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>註冊</h1>
             </div>
-        </form>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form id="signupForm" class="submit" encType="multipart/form-data">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div id="previews" style="width: 250px;" >
+                                        <img id="previewIMG" class="col-12" src="https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg">
+                                    </div>
+                                </div>
+                                <br>
+                                <label class="btn btn-outline-primary col-4">
+                                    <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none;"></input>
+                                    上傳大頭貼
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="name" id="signUpName" placeholder="姓名 *">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="email" id="signUpEmail" type="email" placeholder="信箱 *">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="job" id="signUpJob" type="text" placeholder="職業 *">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <textarea class="form-control" name="intro" id="signUpIntro" placeholder="自我介紹 *" cols="30" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="link" id="signUpLink" placeholder="個人網站">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4"><input type="text" class="form-control" name="tag1" id="signUpTag1" placeholder="標籤1"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag2" id="signUpTag2" placeholder="標籤2"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag3" id="signUpTag3" placeholder="標籤3"></div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button id="send" class="btn btn-primary btn-lg btn-block">送出</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
     </div>
-    <button id="send">送出</button>
-
-
-
+    
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -46,8 +112,6 @@
 
     <script src="/static/JS/signup.js"></script>
     <script src="/static/JS/imagePreview.js"></script>
-</body>
-
 </body>
 
 </html>
