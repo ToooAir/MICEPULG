@@ -5,32 +5,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>個人資訊 | TGIF 臺北設計電波</title>
+    <title>個人資訊| TGIF 臺北設計電波</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        .loading {
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            
+            background: black;
+            opacity: .8;
+
+            position: fixed;
+
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>修改</h1>
-    <form id="editForm" class="submit" encType="multipart/form-data">
-        <input name="name" id="editName" placeholder="姓名"><br>
-        <input name="email" id="editEmail" type="email" placeholder="信箱"><br>
-        <input name="job" id="editJob" placeholder="工作"><br>
-        <textarea name="intro" id="editIntro" placeholder="自我介紹" cols="30" rows="10"></textarea><br>
-        <input name="link" id="editLink" placeholder="個人作品連結(http://)"><br>
-        <input name="tag1" id="editTag1" placeholder="標籤1"><br>
-        <input name="tag2" id="editTag2" placeholder="標籤2"><br>
-        <input name="tag3" id="editTag3" placeholder="標籤3"><br>
-        <label class="button border black padding opacity round center">
-            <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none"></input>
-            <h7>CHOOSE FILE</h7>
-        </label>
-        <div id="previews">
-            <img id="previewIMG" class="padding" height='200'>
+    <div class="loading">
+        <div class="spinner-border text-light" role="status" style="position: fixed; top:47%; left:47%">
+            <span class="sr-only">Loading...</span>
         </div>
-    </form>
     </div>
-    <button id="send">送出</button>
+
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>個人資訊</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form id="editForm" class="submit" encType="multipart/form-data">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div id="previews" style="width: 250px;" >
+                                        <img id="previewIMG" class="col-12" src="https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg">
+                                    </div>
+                                </div>
+                                <br>
+                                <label class="btn btn-outline-primary col-4">
+                                    <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none;"></input>
+                                    上傳大頭貼
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="name" id="editName" placeholder="姓名 *">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="email" id="editEmail" type="email" placeholder="信箱 *">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="job" id="editJob" type="text" placeholder="職業 *">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <textarea class="form-control" name="intro" id="editIntro" placeholder="自我介紹 *" cols="30" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <input class="form-control" name="link" id="editLink" placeholder="個人網站">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4"><input type="text" class="form-control" name="tag1" id="editTag1" placeholder="標籤1"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag2" id="editTag2" placeholder="標籤2"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag3" id="editTag3" placeholder="標籤3"></div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <button id="send" class="btn btn-primary btn-lg btn-block">送出</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
+    </div>
 
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

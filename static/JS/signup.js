@@ -12,6 +12,8 @@ function initializeApp(data) {
 function singUp(lineUserId) {
     $("#send").click(function () {
         if ($("#signUpName").val() != "") {
+            $(".loading").css("display", "block");
+            
             link = $("#signUpLink").val();
             if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1) {
                 data = new FormData($("#signupForm")[0]);
