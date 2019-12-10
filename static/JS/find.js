@@ -11,7 +11,7 @@ function initializeApp(data) {
 function sendMessage() {
     $("#send").click(function () {
         var Id = $("#findId").val();
-        find = "我要找#" + Id + "號"
+        find = "#" + Id
         liff.sendMessages([
             {
               type:'text',
