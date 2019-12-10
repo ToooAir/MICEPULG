@@ -1,5 +1,5 @@
 curl -v -X POST https://api.line.me/v2/bot/richmenu \
--H 'Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+-H 'Authorization: Bearer H/u5OdbU0fquaqOAuI3z1Hq8R0hAWS5RQqjzWBgjZdajxWysB8KCxgkitqDplssZDcgIINfAfD0+RnhS1It8gcfo+/HM5Ovo/PudGRVswVzMLNqe4nafuaaBofVWvIugdVERFvG8i1pMwKcj3tqR1AdB04t89/1O/w1cDnyilFU=' \
 -H 'Content-Type: application/json' \
 -d \
 '{
@@ -7,9 +7,9 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
       "width": 2500,
       "height": 1686
     },
-    "selected": false,
+    "selected": true,
     "name": "menu",
-    "chatBarText": "主選單",
+    "chatBarText": "選單",
     "areas": [
       {
         "bounds": {
@@ -47,7 +47,7 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
         "action": {
           "type": "uri",
           "label": "Find",
-          "uri": "line://app/1653599527-pVnjrOek"
+          "uri": "line://app/1653596770-zMa3Gw7g"
         }
       },
       {
@@ -92,26 +92,20 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
    ]
 }'
 
-return {"richMenuId":"richmenu-8e81db4e38d5e643d8152b92693ebb48"}
+return {"richMenuId":"richmenu-ec3305da20d7fd5a4d94e89fa8cd392f"}
 
-curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-8e81db4e38d5e643d8152b92693ebb48/content \
--H "Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-ec3305da20d7fd5a4d94e89fa8cd392f/content \
+-H "Authorization: Bearer H/u5OdbU0fquaqOAuI3z1Hq8R0hAWS5RQqjzWBgjZdajxWysB8KCxgkitqDplssZDcgIINfAfD0+RnhS1It8gcfo+/HM5Ovo/PudGRVswVzMLNqe4nafuaaBofVWvIugdVERFvG8i1pMwKcj3tqR1AdB04t89/1O/w1cDnyilFU=' \
 -H 'Content-Type: application/json" \
 -H "Content-Type: image/png" \
 -T /Users/toooair/Downloads/menu.png
 
 return {}
 
-postman
-curl -v -X POST https://api.line.me/v2/bot/user/all/richmenu/richmenu-8e81db4e38d5e643d8152b92693ebb48 \
--H "Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU="
-
-return {}
-
 -----------------------------------login
 
 curl -v -X POST https://api.line.me/v2/bot/richmenu \
--H 'Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+-H 'Authorization: Bearer H/u5OdbU0fquaqOAuI3z1Hq8R0hAWS5RQqjzWBgjZdajxWysB8KCxgkitqDplssZDcgIINfAfD0+RnhS1It8gcfo+/HM5Ovo/PudGRVswVzMLNqe4nafuaaBofVWvIugdVERFvG8i1pMwKcj3tqR1AdB04t89/1O/w1cDnyilFU=' \
 -H 'Content-Type: application/json' \
 -d \
 '{
@@ -119,9 +113,9 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
       "width": 2500,
       "height": 843
     },
-    "selected": false,
+    "selected": true,
     "name": "login",
-    "chatBarText": "Welcome",
+    "chatBarText": "選單",
     "areas": [
       {
         "bounds": {
@@ -133,16 +127,22 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
         "action": {
           "type": "uri",
           "label": "login",
-          "uri": "line://app/1653599527-KjlZpO3N"
+          "uri": "line://app/1653596770-86mJ3DaK"
         }
       }
    ]
 }'
 
-{"richMenuId":"richmenu-1b9f083db5ccd8a902ce7254335ceb7c"}
+{"richMenuId":"richmenu-5b8c6af15e3bf3880f05c71ebea67427"}
 
-curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-1b9f083db5ccd8a902ce7254335ceb7c/content \
--H "Authorization: Bearer rV7RixnxnKPN60jw7mQY9/zL9mGpGQzqPD1D15no/cZzaA9ms3AP67D1dds00U5sPkCk5UoGJyAk9mHZMnK6aom0PTUZpBjMhV5FACGUTFETUSm6mH1FNUJmAtjZLKlr1VBZP5ABwrKha0K0tGkhXAdB04t89/1O/w1cDnyilFU=' \
+curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-5b8c6af15e3bf3880f05c71ebea67427/content \
+-H "Authorization: Bearer H/u5OdbU0fquaqOAuI3z1Hq8R0hAWS5RQqjzWBgjZdajxWysB8KCxgkitqDplssZDcgIINfAfD0+RnhS1It8gcfo+/HM5Ovo/PudGRVswVzMLNqe4nafuaaBofVWvIugdVERFvG8i1pMwKcj3tqR1AdB04t89/1O/w1cDnyilFU=' \
 -H 'Content-Type: application/json" \
 -H "Content-Type: image/png" \
 -T /Users/toooair/Downloads/login.png
+
+postman
+curl -v -X POST https://api.line.me/v2/bot/user/all/richmenu/richmenu-5b8c6af15e3bf3880f05c71ebea67427 \
+-H "Authorization: Bearer H/u5OdbU0fquaqOAuI3z1Hq8R0hAWS5RQqjzWBgjZdajxWysB8KCxgkitqDplssZDcgIINfAfD0+RnhS1It8gcfo+/HM5Ovo/PudGRVswVzMLNqe4nafuaaBofVWvIugdVERFvG8i1pMwKcj3tqR1AdB04t89/1O/w1cDnyilFU="
+
+return {}
