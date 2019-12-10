@@ -9,7 +9,7 @@
         "contents": [
           {
             "type": "text",
-            "text": "{{user.id}}",
+            "text": "#{{user.id}}",
             "weight": "bold",
             "size": "lg",
             "align": "center"
