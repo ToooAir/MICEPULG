@@ -24,11 +24,11 @@ function dataURItoBlob(dataURI) {
 
 function editprofile(lineUserId) {
     $("#send").click(function () {
-        if ($("#editName").val() != "") {
+        if ($("#editName").val() != "" && $("#editEmail").val() != "" && $("#editIntro").val() != "") {
             $(".loading").css("display", "block");
 
             link = $("#editLink").val();
-            if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1) {
+            if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1 || link == "") {
                 data = new FormData($("#editForm")[0]);
                 data.append("lineUserId", lineUserId);
                 var uri = $("#previewIMG").attr("src");
@@ -64,7 +64,7 @@ function editprofile(lineUserId) {
             }
 
         } else {
-            alert("姓名不能為空");
+            alert("有必填欄位沒填");
         }
 
 

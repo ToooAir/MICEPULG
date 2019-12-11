@@ -23,11 +23,11 @@ function dataURItoBlob(dataURI) {
 
 function singUp(lineUserId) {
     $("#send").click(function () {
-        if ($("#signUpName").val() != "") {
+        if ($("#signUpName").val() != "" && $("#signUpEmail").val() != "" && $("#signUpIntro").val() != "") {
             $(".loading").css("display", "block");
             
             link = $("#signUpLink").val();
-            if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1) {
+            if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1 || link == "") {
                 data = new FormData($("#signupForm")[0]);
                 data.append("lineUserId", lineUserId);
                 var uri = $("#previewIMG").attr("src");
@@ -56,7 +56,7 @@ function singUp(lineUserId) {
             };
 
         }else{
-            alert("姓名不能為空");
+            alert("有必填欄位沒填");
         }
 
     });
