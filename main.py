@@ -108,7 +108,7 @@ def register():
         filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
         request.files["image"].save(os_path.join(imageSaveDir, filename))
     else:
-        filename = "https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg"
+        filename = config['default_avater']
     alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
 
     resp = make_response(json_dumps(data))
@@ -218,7 +218,10 @@ def message_text(event):
         try:
             find = text.split("#")[1].split("號")[0]
             user = alchemyFunc.findSomeone(find)
-            if(user["picture"].find("http")==-1):
+            
+            if user['picture'] == "":
+                picture = config['default_avater']
+            elif(user["picture"].find("http")==-1):
                 picture = config['domain']+imageSaveDir+user["picture"]
             else:
                 picture = user["picture"]
@@ -242,7 +245,9 @@ def message_text(event):
     elif(text == "修改成功"):
         user = alchemyFunc.getProfile(lineUserId)
 
-        if(user["picture"].find("http")==-1):
+        if user['picture'] == "":
+            picture = config['default_avater']
+        elif(user["picture"].find("http")==-1):
             picture = config['domain']+imageSaveDir+user["picture"]
         else:
             picture = user["picture"]
@@ -301,7 +306,9 @@ def handlePostback(event):
 
         user = alchemyFunc.getProfile(lineUserId)
 
-        if(user["picture"].find("http")==-1):
+        if user['picture'] == "":
+            picture = config['default_avater']
+        elif(user["picture"].find("http")==-1):
             picture = config['domain']+imageSaveDir+user["picture"]
         else:
             picture = user["picture"]
@@ -320,8 +327,10 @@ def handlePostback(event):
 
         user = alchemyFunc.drawCard()
 
-        if(user["picture"].find("http")==-1):
-            picture = config['domain']+imageSaveDir+user["picture"]
+        if user['picture'] == "":
+            picture = config['default_avater']
+        elif(user["picture"].find("http") == -1):
+            picture = config['domain'] + imageSaveDir + user["picture"]
         else:
             picture = user["picture"]
 

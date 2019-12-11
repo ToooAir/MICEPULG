@@ -19,7 +19,8 @@ config = {
         'find':'',
         'comment':''
     },
-    'domain':'https://d7cac9a9.ngrok.io/'
+    'domain':'https://d7cac9a9.ngrok.io/',
+    'default_avater':'https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg'
 }
 
 SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}/{}?charset=utf8".format(
