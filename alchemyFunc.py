@@ -196,11 +196,11 @@ def addFollow(lineUserId, followTs):
     session.close()
 
 
-def addLogs(lineUserId, comand, content, callTs, ip):
+def addLogs(lineUserId, comand, content, callTs):
     session = DB_session()
     spend = round((time() - callTs)*1000)
     log = Logs(line_user_id=lineUserId, comand=comand,
-               content=content, create_time=callTs, ip=ip, spend_ms=spend)
+               content=content, create_time=callTs, spend_ms=spend)
     session.add(log)
     session.commit()
     session.close()

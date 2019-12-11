@@ -85,8 +85,7 @@ def bind():
 
     line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
 
-    alchemyFunc.addLogs(lineUserId, "bind", "", g.startTime,
-                        request.headers['X-Forwarded-For'])
+    alchemyFunc.addLogs(lineUserId, "bind", "", g.startTime)
 
     return resp
 
@@ -116,8 +115,7 @@ def register():
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
     line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
-    alchemyFunc.addLogs(lineUserId, "register", "", g.startTime,
-                        request.headers['X-Forwarded-For'])
+    alchemyFunc.addLogs(lineUserId, "register", "", g.startTime)
 
     return resp
 
@@ -146,8 +144,7 @@ def editprofile():
     resp = make_response(json_dumps(name))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    alchemyFunc.addLogs(lineUserId, "edit", "", g.startTime,
-                        request.headers['X-Forwarded-For'])
+    alchemyFunc.addLogs(lineUserId, "edit", "", g.startTime)
     return resp
 
 
@@ -183,8 +180,7 @@ def addComment():
         "time": sendTime
     }
 
-    alchemyFunc.addLogs(lineUserId, "addcomment", "", g.startTime,
-                                request.headers['X-Forwarded-For'])
+    alchemyFunc.addLogs(lineUserId, "addcomment", "", g.startTime)
 
     resp = make_response(json_dumps(data))
     resp.status_code = 200
@@ -233,8 +229,7 @@ def message_text(event):
                     FlexSendMessage(alt_text=text, contents=flex)
                 ]
             )
-            alchemyFunc.addLogs(lineUserId, "find", "", g.startTime,
-                                request.headers['X-Forwarded-For'])
+            alchemyFunc.addLogs(lineUserId, "find", "", g.startTime)
         except:
             line_bot_api.reply_message(
                 event.reply_token, [
@@ -272,8 +267,7 @@ def message_text(event):
             ]
         )
 
-        alchemyFunc.addLogs(lineUserId, "reset", "", g.startTime,
-                                request.headers['X-Forwarded-For'])
+        alchemyFunc.addLogs(lineUserId, "reset", "", g.startTime)
 
     else:
         
@@ -293,8 +287,7 @@ def handleFollow(event):
             ]
         )
     alchemyFunc.addFollow(lineUserId, g.startTime)
-    alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime,
-                        request.headers['X-Forwarded-For'])
+    alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime)
 
 
 @handler.add(PostbackEvent)
@@ -320,8 +313,7 @@ def handlePostback(event):
             FlexSendMessage(alt_text=text, contents=flex)
         )
 
-        alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
-                            request.headers['X-Forwarded-For'])
+        alchemyFunc.addLogs(lineUserId, text, "", g.startTime)
 
     elif(text == "抽卡"):
 
@@ -342,8 +334,7 @@ def handlePostback(event):
             ]
         )
 
-        alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
-                            request.headers['X-Forwarded-For'])
+        alchemyFunc.addLogs(lineUserId, text, "", g.startTime)
 
     elif(text == "活動資訊"):
 
@@ -355,8 +346,7 @@ def handlePostback(event):
             ]
         )
 
-        alchemyFunc.addLogs(lineUserId, text, "", g.startTime,
-                            request.headers['X-Forwarded-For'])
+        alchemyFunc.addLogs(lineUserId, text, "", g.startTime)
 
 if __name__ == "__main__":
     app.run()
