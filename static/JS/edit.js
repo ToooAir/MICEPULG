@@ -1,4 +1,7 @@
 window.onload = function (e) {
+    lineUserId = "U80652db48632d5c313b01e447b79510c";
+    this.getProfile(lineUserId);
+    this.editprofile(lineUserId);
     liff.init(function (data) {
         initializeApp(data);
     });
@@ -89,7 +92,7 @@ function getProfile(lineUserId) {
             $("#editTag1").val(data["tag1"]);
             $("#editTag2").val(data["tag2"]);
             $("#editTag3").val(data["tag3"]);
-            if(data["picture"].indexOf("http")!=-1){
+            if(data["picture"].indexOf("http")==-1){
                 $("#previewIMG").attr("src", "/static/uploadImage/" + data["picture"]);
             }else{
                 $("#previewIMG").attr("src", data["picture"]);
