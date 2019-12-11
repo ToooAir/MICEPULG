@@ -1,7 +1,4 @@
 window.onload = function (e) {
-    lineUserId = "U80652db48632d5c313b01e447b79510c";
-    this.getProfile(lineUserId);
-    this.editprofile(lineUserId);
     liff.init(function (data) {
         initializeApp(data);
     });
