@@ -1,4 +1,7 @@
 window.onload = function (e) {
+    lineUserId = "U80652db48632d5c313b01e447b79510c";
+    this.getProfile(lineUserId);
+    this.editprofile(lineUserId);
     liff.init(function (data) {
         initializeApp(data);
     });
@@ -25,10 +28,10 @@ function dataURItoBlob(dataURI) {
 function editprofile(lineUserId) {
     $("#send").click(function () {
         if ($("#editName").val() != "" && $("#editEmail").val() != "" && $("#editIntro").val() != "") {
-            $(".loading").css("display", "block");
 
             link = $("#editLink").val();
             if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1 || link == "") {
+                $(".loading").css("display", "block");
                 data = new FormData($("#editForm")[0]);
                 data.append("lineUserId", lineUserId);
                 var uri = $("#previewIMG").attr("src");
@@ -89,7 +92,7 @@ function getProfile(lineUserId) {
             $("#editTag1").val(data["tag1"]);
             $("#editTag2").val(data["tag2"]);
             $("#editTag3").val(data["tag3"]);
-            if(data["picture"].indexOf("http")!=-1){
+            if(data["picture"].indexOf("http")==-1){
                 $("#previewIMG").attr("src", "/static/uploadImage/" + data["picture"]);
             }else{
                 $("#previewIMG").attr("src", data["picture"]);
