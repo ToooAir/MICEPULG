@@ -74,12 +74,12 @@ def bind():
     lineUserId = data["lineUserId"]
 
     if(alchemyFunc.checkNonExist(bindId)):
-        resp = make_response("該序號並不存在")
+        return "該序號並不存在"
     elif(alchemyFunc.checkRepeat(bindId)):
-        resp = make_response("該序號已被使用")
-    else:
-        alchemyFunc.bindUser(bindId, lineUserId)
-        resp = make_response(json_dumps(data))
+        return "該序號已被使用"
+    
+    alchemyFunc.bindUser(bindId, lineUserId)
+    resp = make_response(json_dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
