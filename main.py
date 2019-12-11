@@ -74,9 +74,9 @@ def bind():
     lineUserId = data["lineUserId"]
 
     if(alchemyFunc.checkNonExist(bindId)):
-        return "該序號並不存在"
+        return "此驗證碼不存在，請確認你的驗證碼或洽詢現場工作人員。"
     elif(alchemyFunc.checkRepeat(bindId)):
-        return "該序號已被使用"
+        return "此驗證碼已使用過，請確認你的驗證碼或洽詢現場工作人員。"
     
     alchemyFunc.bindUser(bindId, lineUserId)
     resp = make_response(json_dumps(data))
@@ -273,7 +273,7 @@ def message_text(event):
         
         line_bot_api.reply_message(
             event.reply_token, [
-                TextSendMessage(text="機器人很笨不懂你在說什麼")
+                TextSendMessage(text="嗨～請透過選單操作")
             ]
         )
 
