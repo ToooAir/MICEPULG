@@ -24,19 +24,23 @@ def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture
     session.close()
 
 
-def importUser(bindId, name, email, job, intro, link, tag1, tag2, tag3, picture, ticket, qrcode=None):
+def importUser(bindId, name, id, email, job, intro, link, tag1, tag2, tag3, picture, ticket, qrcode=None):
     session = DB_session()
-    addUser = User(bind_id=bindId, name=name, email=email,
+    
+    addUser = User(bind_id=bindId, name=name, id=id, email=email,
                    intro=intro, link=link, picture=picture, qrcode=qrcode)
+    
     session.add(addUser)
     session.commit()
-    user = session.query(User).filter(User.bind_id == bindId).first()
-    id = user.id
+
     detail = UserDetail(user_id=id, field_a=job,
                         field_b=tag1, field_c=tag2, field_d=tag3)
+    
     tags = Tags(user_id=id, tag_name="ticket", tag_value=ticket)
+    
     session.add(detail)
     session.add(tags)
+    
     session.commit()
     session.close()
 
