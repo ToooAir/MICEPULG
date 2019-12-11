@@ -10,14 +10,22 @@ function initializeApp(data) {
 
 function sendMessage() {
     $("#send").click(function () {
-        var Id = $("#findId").val();
-        find = "#" + Id
-        liff.sendMessages([
-            {
-              type:'text',
-              text:find
-            }
-          ])
-        liff.closeWindow();
+        var Id = $("#findId").val().trim();
+
+        if(id != "") {
+            find = "#" + Id
+
+            liff.sendMessages([
+                {
+                type:'text',
+                text:find
+                }
+            ])
+
+            liff.closeWindow();
+        } else {
+            alert("請輸入要查詢對象的個人編號。")
+        }
+        
     });
 }
