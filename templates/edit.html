@@ -7,14 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>個人資訊| TGIF 臺北設計電波</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <style>
         .loading {
             width: 100vw;
             height: 100vh;
             z-index: 9999;
-            
+
             background: black;
             opacity: .8;
 
@@ -41,24 +42,25 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <form id="editForm" class="submit" encType="multipart/form-data">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div id="previews" style="width: 250px;" >
-                                        <img id="previewIMG" class="col-12" src="https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg">
-                                    </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div id="previews" style="width: 250px;">
+                                    <img id="previewIMG" class="col-12"
+                                        src="https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg">
                                 </div>
-                                <br>
-                                <label class="btn btn-outline-primary col-4">
-                                    <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none;"></input>
-                                    上傳大頭貼
-                                </label>
                             </div>
+                            <br>
+                            <label class="btn btn-outline-primary col-4">
+                                <input type="file" accept=".png,.jpg,.bmp" name="images" class="upload"
+                                    style="display:none;"></input>
+                                上傳大頭貼
+                            </label>
                         </div>
                     </div>
-                    
+                </div>
+                <form id="editForm" class="submit" encType="multipart/form-data">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -66,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -82,11 +84,12 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <textarea class="form-control" name="intro" id="editIntro" placeholder="自我介紹 *" cols="30" rows="5"></textarea>
+                                <textarea class="form-control" name="intro" id="editIntro" placeholder="自我介紹 *"
+                                    cols="30" rows="5"></textarea>
                             </div>
                         </div>
                     </div>
@@ -100,25 +103,26 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-4"><input type="text" class="form-control" name="tag1" id="editTag1" placeholder="標籤1"></div>
-                        <div class="col-4"><input type="text" class="form-control" name="tag2" id="editTag2" placeholder="標籤2"></div>
-                        <div class="col-4"><input type="text" class="form-control" name="tag3" id="editTag3" placeholder="標籤3"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag1" id="editTag1"
+                                placeholder="標籤1"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag2" id="editTag2"
+                                placeholder="標籤2"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag3" id="editTag3"
+                                placeholder="標籤3"></div>
                     </div>
-
                     <br>
+                </form>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <button id="send" class="btn btn-primary btn-lg btn-block">送出</button>
-                            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <button id="send" class="btn btn-primary btn-lg btn-block">送出</button>
                         </div>
                     </div>
-                    
-                </form>
+                </div>
             </div>
         </div>
-        
+
     </div>
 
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>

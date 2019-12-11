@@ -7,14 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>註冊 | TGIF 臺北設計電波</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <style>
         .loading {
             width: 100vw;
             height: 100vh;
             z-index: 9999;
-            
+
             background: black;
             opacity: .8;
 
@@ -31,7 +32,7 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    
+
     <br>
     <div class="container">
         <div class="row">
@@ -41,24 +42,25 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <form id="signupForm" class="submit" encType="multipart/form-data">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div id="previews" style="width: 250px;" >
-                                        <img id="previewIMG" class="col-12" src="https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg">
-                                    </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div id="previews" style="width: 250px;">
+                                    <img id="previewIMG" class="col-12"
+                                        src="https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg">
                                 </div>
-                                <br>
-                                <label class="btn btn-outline-primary col-4">
-                                    <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none;"></input>
-                                    上傳大頭貼
-                                </label>
                             </div>
+                            <br>
+                            <label class="btn btn-outline-primary col-4">
+                                <input type="file" accept=".png,.jpg,.bmp" name="images" class="upload"
+                                    style="display:none;"></input>
+                                上傳大頭貼
+                            </label>
                         </div>
                     </div>
-                    
+                </div>
+                <form id="signupForm" class="submit" encType="multipart/form-data">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -66,11 +68,12 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <input class="form-control" name="email" id="signUpEmail" type="email" placeholder="信箱 *">
+                                <input class="form-control" name="email" id="signUpEmail" type="email"
+                                    placeholder="信箱 *">
                             </div>
                         </div>
                     </div>
@@ -82,11 +85,12 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
-                                <textarea class="form-control" name="intro" id="signUpIntro" placeholder="自我介紹 *" cols="30" rows="5"></textarea>
+                                <textarea class="form-control" name="intro" id="signUpIntro" placeholder="自我介紹 *"
+                                    cols="30" rows="5"></textarea>
                             </div>
                         </div>
                     </div>
@@ -100,9 +104,12 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-4"><input type="text" class="form-control" name="tag1" id="signUpTag1" placeholder="標籤1"></div>
-                        <div class="col-4"><input type="text" class="form-control" name="tag2" id="signUpTag2" placeholder="標籤2"></div>
-                        <div class="col-4"><input type="text" class="form-control" name="tag3" id="signUpTag3" placeholder="標籤3"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag1" id="signUpTag1"
+                                placeholder="標籤1"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag2" id="signUpTag2"
+                                placeholder="標籤2"></div>
+                        <div class="col-4"><input type="text" class="form-control" name="tag3" id="signUpTag3"
+                                placeholder="標籤3"></div>
                     </div>
 
                     <br>
@@ -114,13 +121,13 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
-        
+
     </div>
-    
+
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"

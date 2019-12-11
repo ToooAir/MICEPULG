@@ -103,13 +103,12 @@ def register():
     tag1 = data["tag1"]
     tag2 = data["tag2"]
     tag3 = data["tag3"]
-    image = request.files["images"]
 
-    if(image.filename != ""):
-        filename = str(uuid1()) + "." + image.filename.split(".")[-1]
-        image.save(os_path.join(imageSaveDir, filename))
+    if "image" in request.files:
+        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
+        request.files["image"].save(os_path.join(imageSaveDir, filename))
     else:
-        filename = "default.jpg"
+        filename = "https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg"
     alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
 
     resp = make_response(json_dumps(data))
@@ -135,14 +134,13 @@ def editprofile():
     tag1 = data["tag1"]
     tag2 = data["tag2"]
     tag3 = data["tag3"]
-    image = request.files["images"]
 
     filename = alchemyFunc.getPicture(lineUserId)
-    if(image.filename != ""):
+    if "image" in request.files:
         if(os_path.isfile(imageSaveDir+filename)):
             os_remove(imageSaveDir+filename)
-        filename = str(uuid1()) + "." + image.filename.split(".")[-1]
-        image.save(os_path.join(imageSaveDir, filename))
+        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
+        request.files["image"].save(os_path.join(imageSaveDir, filename))
 
     alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
     resp = make_response(json_dumps(name))
