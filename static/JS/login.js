@@ -13,7 +13,7 @@ function initializeApp(data) {
 
 function inputSelect() {
     $('#id_no1').focus().select();
-    $('#idform').children('input').keyup(function (e) {
+    $('#idform').children('div').children('input').keyup(function (e) {
         // 限制只能輸入數字
         if (!/^\d+$/.test(this.value)) {
             var newValue = /^\d+/.exec(this.value);
