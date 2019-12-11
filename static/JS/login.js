@@ -39,7 +39,7 @@ function login(lineUserId) {
                 liff.closeWindow();
             },
             error: function (jqXHR) {
-                alert("error: " + jqXHR.responseText);
+                alert(jqXHR.responseText);
             }
         });
 

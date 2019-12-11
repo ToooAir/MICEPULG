@@ -33,7 +33,7 @@ function addComment(lineUserId, id) {
                 location.reload();
             },
             error: function (jqXHR) {
-                alert("error: " + jqXHR.responseText);
+                alert(jqXHR.responseText);
             }
         });
 
