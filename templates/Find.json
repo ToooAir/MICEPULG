@@ -43,39 +43,39 @@
             "style": "normal"
           }
         ]
-      },
+      }{% if user.tag1 or user.tag2 or user.tag3 %},
       {
         "type": "box",
         "layout": "vertical",
         "contents": [
           {
             "type": "text",
-            "text": "#{{user.tag1}} #{{user.tag2}} #{{user.tag3}}",
+            "text": "{% if user.tag1 %}#{{user.tag1}} {% endif %}{% if user.tag2 %}#{{user.tag2}} {% endif %}{% if user.tag3 %}#{{user.tag3}}{% endif %}",
             "size": "sm"
           }
         ],
         "margin": "sm"
-      },
+      }{% endif %}{% if user.intro %},
       {
         "type": "box",
         "layout": "vertical",
         "contents": [
           {
             "type": "text",
-            "text": " {{user.intro}}",
+            "text": "{{user.intro}}",
             "size": "sm",
             "wrap": true
           }
         ],
         "margin": "md"
-      }
+      }{% endif %}
     ]
   },
   "footer": {
     "type": "box",
     "layout": "horizontal",
     "contents": [
-      {
+      {% if user.link %}{
         "type": "button",
         "action": {
           "type": "uri",
@@ -83,7 +83,7 @@
           "uri": "{{user.link}}"
         },
         "style": "primary"
-      },
+      },{% endif %}
       {
         "type": "button",
         "action": {
