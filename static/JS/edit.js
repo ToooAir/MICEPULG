@@ -25,10 +25,10 @@ function dataURItoBlob(dataURI) {
 function editprofile(lineUserId) {
     $("#send").click(function () {
         if ($("#editName").val() != "" && $("#editEmail").val() != "" && $("#editIntro").val() != "") {
-            $(".loading").css("display", "block");
 
             link = $("#editLink").val();
             if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1 || link == "") {
+                $(".loading").css("display", "block");
                 data = new FormData($("#editForm")[0]);
                 data.append("lineUserId", lineUserId);
                 var uri = $("#previewIMG").attr("src");

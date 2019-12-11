@@ -24,10 +24,10 @@ function dataURItoBlob(dataURI) {
 function singUp(lineUserId) {
     $("#send").click(function () {
         if ($("#signUpName").val() != "" && $("#signUpEmail").val() != "" && $("#signUpIntro").val() != "") {
-            $(".loading").css("display", "block");
             
             link = $("#signUpLink").val();
             if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1 || link == "") {
+                $(".loading").css("display", "block");
                 data = new FormData($("#signupForm")[0]);
                 data.append("lineUserId", lineUserId);
                 var uri = $("#previewIMG").attr("src");
