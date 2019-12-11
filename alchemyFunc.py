@@ -45,18 +45,18 @@ def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, pictur
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     user.name = name
     user.email = email
-    user.job = job
     user.intro = intro
     user.link = link
     user.picture = picture
     detail = session.query(UserDetail).filter(
         UserDetail.user_id == user.id).first()
-    detail.tag1 = tag1
-    detail.tag2 = tag2
-    detail.tag3 = tag3
+    detail.field_a = job
+    detail.field_b = tag1
+    detail.field_c = tag2
+    detail.field_d = tag3
     session.commit()
     session.close()
-    
+
 
 def deleteUser(lineUserId):
     session = DB_session()
