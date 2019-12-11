@@ -10,7 +10,7 @@
         "contents": [
           {
             "type": "text",
-            "text": "標題",
+            "text": "多工能展演廳位置圖",
             "size": "md",
             "weight": "bold"
           }
@@ -18,32 +18,17 @@
       },
       "hero": {
         "type": "image",
-        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/map01.jpg",
         "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "320:213"
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
       },
       "body": {
         "type": "box",
         "layout": "vertical",
         "contents": [
           {
-            "type": "text",
-            "text": "第一段內容"
-          },
-          {
-            "type": "text",
-            "text": "活動介紹一",
-            "weight": "regular",
-            "size": "sm",
-            "wrap": true,
-            "contents": [
-              {
-                "type": "span",
-                "text": "第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容",
-                "size": "xxs"
-              }
-            ]
+            "type": "spacer"
           }
         ],
         "spacing": "sm",
@@ -57,8 +42,8 @@
             "type": "button",
             "action": {
               "type": "uri",
-              "label": "點我看更多",
-              "uri": "http://linecorp.com/"
+              "label": "點我看大圖",
+              "uri": "https://storage.googleapis.com/tgif.momoka.tw/menu/map01.jpg"
             },
             "style": "link",
             "gravity": "top",
@@ -88,7 +73,7 @@
         "contents": [
           {
             "type": "text",
-            "text": "標題",
+            "text": "時程表 Schedule",
             "size": "md",
             "weight": "bold"
           }
@@ -96,32 +81,17 @@
       },
       "hero": {
         "type": "image",
-        "url": "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/_2019-12-03_11.22.10_.png",
         "size": "full",
-        "aspectMode": "cover",
-        "aspectRatio": "320:213"
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
       },
       "body": {
         "type": "box",
         "layout": "vertical",
         "contents": [
           {
-            "type": "text",
-            "text": "第一段內容"
-          },
-          {
-            "type": "text",
-            "text": "活動介紹一",
-            "weight": "regular",
-            "size": "sm",
-            "wrap": true,
-            "contents": [
-              {
-                "type": "span",
-                "text": "第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容第二段內容",
-                "size": "xxs"
-              }
-            ]
+            "type": "spacer"
           }
         ],
         "spacing": "sm",
@@ -135,8 +105,8 @@
             "type": "button",
             "action": {
               "type": "uri",
-              "label": "點我看更多",
-              "uri": "http://linecorp.com/"
+              "label": "點我看大圖",
+              "uri": "https://storage.googleapis.com/tgif.momoka.tw/menu/_2019-12-03_11.22.10_.png"
             },
             "style": "link",
             "gravity": "top",
@@ -150,6 +120,399 @@
           "label": "action",
           "data": "hello"
         }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "場地配置圖",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/map02.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "spacer"
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "點我看大圖",
+              "uri": "https://storage.googleapis.com/tgif.momoka.tw/menu/map02.jpg"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "講師介紹",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/AK.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Andrew Kramer",
+            "size": "md",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "17:40-19:10"
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "查看講師簡介",
+              "text": "#1"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "講師介紹",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/oddfellows.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Oddfellows",
+            "size": "md",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "15:00-16:30"
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "查看講師簡介",
+              "text": "#2"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "講師介紹",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/tinganho.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "何庭安 Ting An Ho",
+            "size": "md",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "13:40-14:40"
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "查看講師簡介",
+              "text": "#4"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "講師介紹",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/menu/Mark_BB.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Adobe Mark Tsai",
+            "size": "md",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "16:50-17:20"
+          }
+        ],
+        "spacing": "sm",
+        "paddingAll": "13px"
+      },
+      "footer": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "message",
+              "label": "查看講師簡介",
+              "text": "#5"
+            },
+            "style": "link",
+            "gravity": "top",
+            "height": "sm"
+          }
+        ],
+        "spacing": "xs",
+        "position": "relative",
+        "action": {
+          "type": "postback",
+          "label": "action",
+          "data": "hello"
+        }
+      },
+      "styles": {
+        "footer": {
+          "separator": true
+        }
+      }
+    },
+    {
+      "type": "bubble",
+      "size": "kilo",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "《 TGIF台北設計電波 》",
+            "size": "md",
+            "weight": "bold"
+          }
+        ]
+      },
+      "hero": {
+        "type": "image",
+        "url": "https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg",
+        "size": "full",
+        "aspectMode": "fit",
+        "aspectRatio": "1:1"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "官方網站",
+              "uri": "https://www.tgif.com.tw/"
+            }
+          },
+          {
+            "type": "button",
+            "action": {
+              "type": "uri",
+              "label": "粉絲專頁",
+              "uri": "https://www.facebook.com/tgifcomtw/"
+            }
+          }
+        ]
       },
       "styles": {
         "footer": {
