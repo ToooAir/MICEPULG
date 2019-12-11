@@ -12,7 +12,8 @@ function sendMessage() {
     $("#send").click(function () {
         var Id = $("#findId").val().trim();
 
-        if(id != "") {
+        if(Id != "") {
+
             find = "#" + Id
 
             liff.sendMessages([
