@@ -12,30 +12,36 @@ function initializeApp(data) {
 
 function addComment(lineUserId, id) {
     $("#send").click(function () {
-        const input = $('#comment').val();
-        data = {
-            lineUserId: lineUserId,
-            id: id,
-            comment: input,
-        };
-        $.ajax({
-            type: "POST",
-            cache: false,
-            data: data,
-            url: "/addcomment",
-            dataType: "json",
-            success: function (data) {
-                // name = data["name"];
-                // time = data["time"];
-                // const result = "<div><label>" + name + " " + time + " " + input + "</label></div >";
-                // $('#comment').val('');
-                // $('#comment_list').append(result);
-                location.reload();
-            },
-            error: function (jqXHR) {
-                alert(jqXHR.responseText);
-            }
-        });
+        var msg = $('#comment').val().trim();
+
+        if(msg != "") {
+            data = {
+                lineUserId: lineUserId,
+                id: id,
+                comment: msg,
+            };
+    
+            $.ajax({
+                type: "POST",
+                cache: false,
+                data: data,
+                url: "/addcomment",
+                dataType: "json",
+                success: function (data) {
+                    // name = data["name"];
+                    // time = data["time"];
+                    // const result = "<div><label>" + name + " " + time + " " + input + "</label></div >";
+                    // $('#comment').val('');
+                    // $('#comment_list').append(result);
+                    location.reload();
+                },
+                error: function (jqXHR) {
+                    alert(jqXHR.responseText);
+                }
+            });
+        } else {
+            alert("請填寫留言內容。")
+        }
 
     });
 

@@ -1,6 +1,9 @@
 from alchemyStart import DB_session
 from alchemyModel import User, UserDetail, Tags, Comment, Followers, Logs
+
 from sqlalchemy.sql.expression import func
+from sqlalchemy import desc
+
 from time import time
 from datetime import datetime
 from random import random
@@ -151,20 +154,22 @@ def getName(lineUserId):
     return str(user.name)
 
 
-def getComments(id):
+def getComments(user_id):
     session = DB_session()
-    user = session.query(User).filter(User.id == id).first()
+    
+    user = session.query(User).filter(User.id == user_id).first()
     lineUserId = user.line_user_id
-    comments = session.query(Comment).filter(
-        Comment.receiver == lineUserId).all()
+    
+    comments = session.query(Comment).filter(Comment.receiver == lineUserId).order_by(desc(Comment.create_time)).all()
+    
     output = []
-    for c in comments:
-        time = datetime.fromtimestamp(
-            c.create_time).strftime('%Y-%m-%d %H:%M:%S')
-        output.append(
-            {"name": c.user.name, "time": time, "content": c.content})
-        print(c.create_time)
+    
+    for comment in comments:
+        time = datetime.fromtimestamp(comment.create_time).strftime('%Y-%m-%d %H:%M')
+        output.append({"name": comment.user.name, "time": time, "content": comment.content})
+    
     session.close()
+    
     return output
 
 
