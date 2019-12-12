@@ -68,7 +68,7 @@ def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, pictur
 def unbindUser(lineUserId):
     session = DB_session()
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
-    user.line_user_id = ""
+    user.line_user_id = None
     session.commit()
     session.close()
 

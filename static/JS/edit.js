@@ -29,19 +29,19 @@ function editprofile(lineUserId) {
             link = $("#editLink").val();
             if (link.indexOf("https://") != -1 || link.indexOf("http://") != -1 || link == "") {
                 $(".loading").css("display", "block");
-                
+
                 data = new FormData($("#editForm")[0]);
                 data.append("lineUserId", lineUserId);
-                
+
                 var uri = $("#previewIMG").attr("src");
-                
+
                 if (uri.indexOf("http") == -1 && uri.indexOf("uploadImage") == -1) {
                     var imgBlob = dataURItoBlob(uri);
                     data.append("image", imgBlob, "image.jpg");
                 }
 
                 $("#send").attr("disabled", "disabled");
-                
+
                 $.ajax({
                     type: "POST",
                     cache: false,
@@ -94,12 +94,9 @@ function getProfile(lineUserId) {
             $("#editTag1").val(data["tag1"]);
             $("#editTag2").val(data["tag2"]);
             $("#editTag3").val(data["tag3"]);
-            if(data["picture"].indexOf("http")==-1){
-                $("#previewIMG").attr("src", "/static/uploadImage/" + data["picture"]);
-            }else{
-                $("#previewIMG").attr("src", data["picture"]);
-            }
-            
+            $("#previewIMG").attr("src", data["picture"]);
+
+
         },
         error: function (jqXHR) {
             alert("error: " + jqXHR.responseText);

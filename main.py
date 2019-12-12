@@ -1,4 +1,5 @@
 import alchemyFunc
+from cloudStorage import uploadImage
 from config import config
 
 from time import time
@@ -110,12 +111,14 @@ def register():
     tag2 = data["tag2"]
     tag3 = data["tag3"]
 
+    imageurl = ""
     if "image" in request.files:
         filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
-        request.files["image"].save(os_path.join(imageSaveDir, filename))
+        imageurl = uploadImage(request.files["image"],filename)
     else:
-        filename = config['default_avater']
-    alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
+        imageurl = config['default_avater']
+
+    alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
 
     resp = make_response(json_dumps(data))
     resp.status_code = 200
@@ -141,13 +144,15 @@ def editprofile():
     tag3 = data["tag3"]
 
     filename = alchemyFunc.getPicture(lineUserId)
+    imageurl = ""
+    
     if "image" in request.files:
-        if(os_path.isfile(imageSaveDir+filename)):
-            os_remove(imageSaveDir+filename)
         filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
-        request.files["image"].save(os_path.join(imageSaveDir, filename))
+        imageurl = uploadImage(request.files["image"],filename)
+    else:
+        imageurl = filename
 
-    alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,filename)
+    alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
     resp = make_response(json_dumps(name))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
@@ -219,13 +224,11 @@ def message_text(event):
 
     if(text.startswith("#") and text[1:].isdigit()):
         try:
-            find = text.split("#")[1].split("號")[0]
+            find = text.split("#")[1]
             user = alchemyFunc.findSomeone(find)
             
             if user['picture'] == "":
                 picture = config['default_avater']
-            elif(user["picture"].find("http")==-1):
-                picture = config['domain']+imageSaveDir+user["picture"]
             else:
                 picture = user["picture"]
 
@@ -249,8 +252,6 @@ def message_text(event):
 
         if user['picture'] == "":
             picture = config['default_avater']
-        elif(user["picture"].find("http")==-1):
-            picture = config['domain']+imageSaveDir+user["picture"]
         else:
             picture = user["picture"]
 
@@ -308,8 +309,6 @@ def handlePostback(event):
 
         if user['picture'] == "":
             picture = config['default_avater']
-        elif(user["picture"].find("http")==-1):
-            picture = config['domain']+imageSaveDir+user["picture"]
         else:
             picture = user["picture"]
 
@@ -328,8 +327,6 @@ def handlePostback(event):
 
         if user['picture'] == "":
             picture = config['default_avater']
-        elif(user["picture"].find("http") == -1):
-            picture = config['domain'] + imageSaveDir + user["picture"]
         else:
             picture = user["picture"]
 
