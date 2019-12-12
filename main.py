@@ -4,8 +4,6 @@ from config import config
 
 from time import time
 from datetime import datetime
-from argparse import ArgumentParser
-from os import path as os_path, remove as os_remove
 from json import loads as json_load, dumps as json_dumps
 
 from uuid import uuid1
@@ -25,7 +23,6 @@ from linebot.models import (
 # config
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
-imageSaveDir = 'static/uploadImage/'
 
 def setPicture(user):
     if user['picture'] == "":
