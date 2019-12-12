@@ -247,6 +247,14 @@ def message_text(event):
                 ]
             )
 
+    elif(text.startswith("綁定#")):
+
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text="綁定成功")
+                ]
+            )
+
     elif(text == "修改成功"):
         user = alchemyFunc.getProfile(lineUserId)
         picture = setPicture(user)

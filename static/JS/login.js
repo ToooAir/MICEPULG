@@ -36,6 +36,12 @@ function login(lineUserId) {
             url: "/bind",
             dataType: "json",
             success: function (data) {
+                liff.sendMessages([
+                    {
+                    type:'text',
+                    text:'綁定#'+number
+                    }
+                ])
                 liff.closeWindow();
             },
             error: function (jqXHR) {
