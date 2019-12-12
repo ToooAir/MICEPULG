@@ -32,6 +32,13 @@ app = Flask(__name__)
 @app.before_request
 def before_req():
     g.startTime = time()
+    g.uuid = str(uuid1())
+
+@app.context_processor
+def utility_processor():
+    def setuuid(static):
+        return static+"?v="+g.uuid
+    return dict(setuuid=setuuid)
 
 # website
 @app.route("/login", methods=["GET"])
