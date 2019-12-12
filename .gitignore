@@ -5,3 +5,5 @@
 /__pycache__/*
 .env
 config.py
+boky-chatbot-*.json
+user_data.csv
