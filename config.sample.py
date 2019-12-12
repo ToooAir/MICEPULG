@@ -23,5 +23,5 @@ config = {
     'default_avater':'https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg'
 }
 
-SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}/{}?charset=utf8".format(
+SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}/{}?charset=utf8mb4".format(
     config['mysql']['dialect'], config['mysql']['driver'], config['mysql']['username'], config['mysql']['password'], config['mysql']['host'], config['mysql']['database'])
