@@ -8,7 +8,7 @@ def uploadImage(image,filename):
 
     bucket = gcs.get_bucket(config["CLOUD_STORAGE_BUCKET"])
 
-    blob = bucket.blob(filename)
+    blob = bucket.blob("avatar/" + filename)
 
     blob.upload_from_string(image.read(), content_type=image.content_type)
 
