@@ -279,15 +279,6 @@ def message_text(event):
 
         alchemyFunc.addLogs(lineUserId, "reset", "", g.startTime)
 
-    else:
-        
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text="嗨～請透過選單操作")
-            ]
-        )
-
-
 @handler.add(FollowEvent)
 def handleFollow(event):
     lineUserId = event.source.user_id
