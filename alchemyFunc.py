@@ -2,12 +2,18 @@ from alchemyStart import DB_session
 from alchemyModel import User, UserDetail, Tags, Comment, Followers, Logs
 
 from sqlalchemy.sql.expression import func
-from sqlalchemy import desc
+from sqlalchemy import desc, null
 
 from time import time
 from datetime import datetime
 from random import random
 
+def getUser(line_user_id):
+    session = DB_session()
+    user = session.query(User).filter(User.line_user_id == line_user_id).one()
+    session.close()
+
+    return user
 
 def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
     session = DB_session()
@@ -67,17 +73,24 @@ def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, pictur
 
 def unbindUser(lineUserId):
     session = DB_session()
-
-    comments = session.query(Comment).filter(Comment.sender == lineUserId).all()
-    for comment in comments:
-        session.delete(comment)
-    session.commit()
     
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
-    user.line_user_id = None
-    session.commit()
 
-    session.close()
+    if user is None:
+        return False
+    else:
+        comments = session.query(Comment).filter(Comment.sender == lineUserId).all()
+        
+        for comment in comments:
+            session.delete(comment)
+        session.commit()
+
+        user.line_user_id = null()
+        session.commit()
+
+        session.close()
+
+        return True
 
 
 def bindUser(bindId, lineUserId):

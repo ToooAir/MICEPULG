@@ -225,6 +225,7 @@ def message_text(event):
     lineUserId = event.source.user_id
     text = event.message.text
 
+    # Find
     if(text.startswith("#") and text[1:].isdigit()):
         try:
             find = text.split("#")[1]
@@ -247,11 +248,11 @@ def message_text(event):
                 ]
             )
 
-    elif(text.startswith("綁定#")):
-
+    # Bind
+    elif(text.startswith("#") and len(text[1:]) == 4):
         line_bot_api.reply_message(
                 event.reply_token, [
-                    TextSendMessage(text="綁定成功")
+                    TextSendMessage(text="登入成功，請將您的個人專屬編號寫上號碼牌： #{}".format(alchemyFunc.getUser(lineUserId).id))
                 ]
             )
 
@@ -267,10 +268,7 @@ def message_text(event):
         )
 
     elif(text == "/reset"):
-        try:
-            alchemyFunc.unbindUser(lineUserId)
-        finally:
-            pass
+        alchemyFunc.unbindUser(lineUserId)
 
         line_bot_api.unlink_rich_menu_from_user(lineUserId)
         line_bot_api.reply_message(
@@ -293,11 +291,7 @@ def message_text(event):
 @handler.add(FollowEvent)
 def handleFollow(event):
     lineUserId = event.source.user_id
-    line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text="歡迎加入")
-            ]
-        )
+    
     alchemyFunc.addFollow(lineUserId, g.startTime)
     alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime)
 
