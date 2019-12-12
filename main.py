@@ -27,6 +27,19 @@ line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
 imageSaveDir = 'static/uploadImage/'
 
+def setPicture(user):
+    if user['picture'] == "":
+        return config['default_avater']
+    else:
+        return user["picture"]
+
+def setResponse(data):
+    resp = make_response(json_dumps(data))
+    resp.status_code = 200
+    resp.headers["Access-Control-Allow-Origin"] = "*"
+    
+    return resp
+
 app = Flask(__name__)
 
 
@@ -87,9 +100,8 @@ def bind():
         return "此驗證碼已使用過，請確認你的驗證碼或洽詢現場工作人員。"
     
     alchemyFunc.bindUser(bindId, lineUserId)
-    resp = make_response(json_dumps(data))
-    resp.status_code = 200
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    resp = setResponse(data)
 
     line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
 
@@ -120,9 +132,7 @@ def register():
 
     alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
 
-    resp = make_response(json_dumps(data))
-    resp.status_code = 200
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp = setResponse(name)
 
     line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
     alchemyFunc.addLogs(lineUserId, "register", "", g.startTime)
@@ -153,9 +163,9 @@ def editprofile():
         imageurl = filename
 
     alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
-    resp = make_response(json_dumps(name))
-    resp.status_code = 200
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    
+    resp = setResponse(name)
+
     alchemyFunc.addLogs(lineUserId, "edit", "", g.startTime)
     return resp
 
@@ -167,9 +177,7 @@ def getprofile():
 
     profile = alchemyFunc.getProfile(lineUserId)
 
-    resp = make_response(json_dumps(profile))
-    resp.status_code = 200
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp = setResponse(profile)
 
     return resp
 
@@ -178,7 +186,7 @@ def getprofile():
 def addComment():
     data = request.form
     lineUserId = data["lineUserId"]
-    id = data["id"]
+    id = data["id"].split("#")[0]
     comment = data["comment"]
     ts = int(time())
 
@@ -194,9 +202,7 @@ def addComment():
 
     alchemyFunc.addLogs(lineUserId, "addcomment", "", g.startTime)
 
-    resp = make_response(json_dumps(data))
-    resp.status_code = 200
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    resp = setResponse(id)
 
     return resp
 
@@ -225,12 +231,9 @@ def message_text(event):
     if(text.startswith("#") and text[1:].isdigit()):
         try:
             find = text.split("#")[1]
-            user = alchemyFunc.findSomeone(find)
-            
-            if user['picture'] == "":
-                picture = config['default_avater']
-            else:
-                picture = user["picture"]
+
+            user = alchemyFunc.findSomeone(find)       
+            picture = setPicture(user)
 
             flex = json_load(render_template(
                 'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
@@ -249,11 +252,7 @@ def message_text(event):
 
     elif(text == "修改成功"):
         user = alchemyFunc.getProfile(lineUserId)
-
-        if user['picture'] == "":
-            picture = config['default_avater']
-        else:
-            picture = user["picture"]
+        picture = setPicture(user)
 
         flex = json_load(render_template(
             'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
@@ -306,11 +305,7 @@ def handlePostback(event):
     if(text == "個人資料"):
 
         user = alchemyFunc.getProfile(lineUserId)
-
-        if user['picture'] == "":
-            picture = config['default_avater']
-        else:
-            picture = user["picture"]
+        picture = setPicture(user)
 
         flex = json_load(render_template(
             'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
@@ -324,11 +319,7 @@ def handlePostback(event):
     elif(text == "抽卡"):
 
         user = alchemyFunc.drawCard()
-
-        if user['picture'] == "":
-            picture = config['default_avater']
-        else:
-            picture = user["picture"]
+        picture = setPicture(user)
 
         flex = json_load(render_template(
             'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)

@@ -44,7 +44,7 @@ def importUser(bindId, name, id, email, job, intro, link, tag1, tag2, tag3, pict
     session.commit()
     session.close()
 
-# importUser("5487","真C折","karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg","超級大佬","201911041604381349845222")
+# importUser("3A2B","真C折", 3,"karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg","超級大佬","201911041604381349845222")
 
 
 def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
@@ -67,9 +67,16 @@ def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, pictur
 
 def unbindUser(lineUserId):
     session = DB_session()
+
+    comments = session.query(Comment).filter(Comment.sender == lineUserId).all()
+    for comment in comments:
+        session.delete(comment)
+    session.commit()
+    
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     user.line_user_id = None
     session.commit()
+
     session.close()
 
 
@@ -161,11 +168,7 @@ def getName(lineUserId):
 def getComments(user_id):
     session = DB_session()
     
-    user = session.query(User).filter(User.id == user_id).first()
-    lineUserId = user.line_user_id
-    
-    comments = session.query(Comment).filter(Comment.receiver == lineUserId).order_by(desc(Comment.create_time)).all()
-    
+    comments = session.query(Comment).filter(Comment.receiver == user_id).order_by(desc(Comment.create_time)).all()
     output = []
     
     for comment in comments:
@@ -177,10 +180,8 @@ def getComments(user_id):
     return output
 
 
-def addComments(sender, receiver_id, content, ts):
+def addComments(sender, receiver, content, ts):
     session = DB_session()
-    user = session.query(User).filter(User.id == receiver_id).first()
-    receiver = user.line_user_id
     comment = Comment(create_time=ts, sender=sender,
                       receiver=receiver, content=content)
     session.add(comment)
