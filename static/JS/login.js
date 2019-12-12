@@ -15,10 +15,10 @@ function inputSelect() {
     $('#id_no1').focus().select();
     $('#idform').children('div').children('input').keyup(function (e) {
         // 限制只能輸入數字
-        if (!/^\d+$/.test(this.value)) {
-            var newValue = /^\d+/.exec(this.value);
-            newValue != null ? $(this).val(newValue) : $(this).val('');
-        }
+        // if (!/^\d+$/.test(this.value)) {
+        //     var newValue = /^\d+/.exec(this.value);
+        //     newValue != null ? $(this).val(newValue) : $(this).val('');
+        // }
         this.value.length == this.getAttribute('maxlength') && $(this).next().focus();
     });
 }
