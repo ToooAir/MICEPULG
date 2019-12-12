@@ -256,7 +256,7 @@ def message_text(event):
 
     elif(text == "/reset"):
         try:
-            alchemyFunc.deleteUser(lineUserId)
+            alchemyFunc.unbindUser(lineUserId)
         finally:
             pass
 
