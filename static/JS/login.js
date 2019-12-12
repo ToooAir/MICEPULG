@@ -39,7 +39,7 @@ function login(lineUserId) {
                 liff.sendMessages([
                     {
                     type:'text',
-                    text:'綁定#'+number
+                    text:'#' + number
                     }
                 ])
                 liff.closeWindow();
@@ -54,7 +54,7 @@ function login(lineUserId) {
 
 function getDigit() {
     digit = $("#id_no1").val() + $("#id_no2").val() + $("#id_no3").val() + $("#id_no4").val()
-    return digit;
+    return digit.toUpperCase();
 }
 
 
