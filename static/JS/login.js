@@ -20,6 +20,9 @@ function inputSelect() {
 function login(lineUserId) {
     $("#login").click(function () {
         var number = getDigit();
+        
+        $(".loading").css("display", "block");
+
         $.ajax({
             type: "POST",
             cache: false,
@@ -40,11 +43,13 @@ function login(lineUserId) {
                 }).catch(function(err){
                     console.log(err);
                     alert('好像出錯了，請聯絡工作人員');
+                    $(".loading").css("display", "none");
                 })
                 
             },
             error: function (jqXHR) {
                 alert(jqXHR.responseText);
+                $(".loading").css("display", "none");
             }
         });
 

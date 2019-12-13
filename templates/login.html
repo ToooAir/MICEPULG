@@ -21,10 +21,29 @@
             display: flex;
             align-items: center;
         }
+
+        .loading {
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+
+            background: black;
+            opacity: .8;
+
+            position: fixed;
+
+            display: none;
+        }
     </style>
 </head>
 
 <body class="col-12">
+    <div class="loading">
+        <div class="spinner-border text-light" role="status" style="position: fixed; top:47%; left:47%">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">

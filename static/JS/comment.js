@@ -20,6 +20,8 @@ function addComment(lineUserId, id) {
                 id: id,
                 comment: msg,
             };
+
+            $(".loading").css("display", "block");
     
             $.ajax({
                 type: "POST",
@@ -32,6 +34,7 @@ function addComment(lineUserId, id) {
                 },
                 error: function (jqXHR) {
                     alert(jqXHR.responseText);
+                    $(".loading").css("display", "none");
                 }
             });
         } else {

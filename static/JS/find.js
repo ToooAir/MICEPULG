@@ -13,8 +13,9 @@ function sendMessage() {
         var Id = $("#findId").val().trim();
 
         if(Id != "") {
-
             find = "#" + Id
+
+            $(".loading").css("display", "block");
 
             liff.sendMessages([
                 {
@@ -22,10 +23,13 @@ function sendMessage() {
                 text:find
                 }
             ]).then(function(){
+                $(".loading").css("display", "none");
                 liff.closeWindow();
             }).catch(function(err){
                 console.log(err);
                 alert('好像出錯了，請聯絡工作人員');
+                $(".loading").css("display", "none");
+
             })
             
         } else {

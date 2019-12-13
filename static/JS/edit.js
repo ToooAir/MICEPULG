@@ -60,6 +60,7 @@ function editprofile(lineUserId) {
                         }).catch(function (err) {
                             console.log(err);
                             alert('好像出錯了，請聯絡工作人員');
+                            $(".loading").css("display", "none");
                         })
                     },
                     error: function (jqXHR) {
