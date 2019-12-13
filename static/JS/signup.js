@@ -44,13 +44,15 @@ function singUp(lineUserId) {
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        liff.closeWindow();
+                        
                         liff.sendMessages([
                             {
                                 type: 'text',
                                 text: '我要註冊'
                             }
                         ]);
+
+                        liff.closeWindow();
                     },
                     error: function (jqXHR) {
                         alert(jqXHR.responseText);
