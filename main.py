@@ -44,12 +44,14 @@ app = Flask(__name__)
 def before_req():
     g.startTime = time()
     g.uuid = str(uuid1())
+    g.config = config
 
 @app.context_processor
 def utility_processor():
     def setuuid(static):
         return static+"?v="+g.uuid
-    return dict(setuuid=setuuid)
+    
+    return {'setuuid': setuuid}
 
 # website
 @app.route("/login", methods=["GET"])

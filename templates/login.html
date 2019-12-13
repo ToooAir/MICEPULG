@@ -29,7 +29,7 @@
         <div class="row">
             <div class="col-12 text-center">
                 <h1>登入</h1>
-                <small class="form-text text-muted">請輸入四位數驗證碼，或點擊<a href="/signup">此連結</a>註冊。</small>
+                <small class="form-text text-muted">請輸入四位數驗證碼{% if g.config['allow_signup'] %}，或點擊<a href="/signup">此連結</a>註冊。{% endif %}</small>
             </div>
         </div>
         <br>
