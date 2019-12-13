@@ -1,5 +1,5 @@
 import alchemyFunc
-from cloudStorage import uploadImage
+from cloudStorage import uploadImage, deleteImage
 from config import config
 
 from time import time
@@ -154,6 +154,8 @@ def editprofile():
     imageurl = ""
     
     if "image" in request.files:
+        if filename != config['default_avater']:
+            deleteImage(filename)
         filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
         imageurl = uploadImage(request.files["image"],filename)
     else:
