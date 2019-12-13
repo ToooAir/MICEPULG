@@ -269,6 +269,14 @@ def message_text(event):
             FlexSendMessage(alt_text=text, contents=flex)
         )
 
+    elif(text == "我要註冊"):
+        line_bot_api.reply_message(
+                event.reply_token, [
+                    TextSendMessage(text="註冊成功，請將您的個人專屬編號寫上號碼牌： #{}".format(alchemyFunc.getUser(lineUserId).id))
+                ]
+            )
+
+
     elif(text == "/reset"):
         alchemyFunc.unbindUser(lineUserId)
 

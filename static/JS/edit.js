@@ -61,6 +61,7 @@ function editprofile(lineUserId) {
                     error: function (jqXHR) {
                         alert(jqXHR.responseText);
                         $("#send").removeAttr("disabled");
+                        $(".loading").css("display", "none");
                     }
                 });
 

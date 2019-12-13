@@ -45,10 +45,17 @@ function singUp(lineUserId) {
                     contentType: false,
                     success: function (data) {
                         liff.closeWindow();
+                        liff.sendMessages([
+                            {
+                                type: 'text',
+                                text: '我要註冊'
+                            }
+                        ]);
                     },
                     error: function (jqXHR) {
                         alert(jqXHR.responseText);
                         $("#send").removeAttr("disabled");
+                        $(".loading").css("display", "none");
                     }
                 });
             } else {
