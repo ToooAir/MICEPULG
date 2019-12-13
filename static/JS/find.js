@@ -21,9 +21,13 @@ function sendMessage() {
                 type:'text',
                 text:find
                 }
-            ])
-
-            liff.closeWindow();
+            ]).then(function(){
+                liff.closeWindow();
+            }).catch(function(err){
+                console.log(err);
+                alert('好像出錯了，請聯絡工作人員');
+            })
+            
         } else {
             alert("請輸入要查詢對象的個人編號。")
         }

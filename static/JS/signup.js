@@ -50,9 +50,12 @@ function singUp(lineUserId) {
                                 type: 'text',
                                 text: '我要註冊'
                             }
-                        ]);
-
-                        liff.closeWindow();
+                        ]).then(function () {
+                            liff.closeWindow();
+                        }).catch(function (err) {
+                            console.log(err);
+                            alert('好像出錯了，請聯絡工作人員');
+                        })
                     },
                     error: function (jqXHR) {
                         alert(jqXHR.responseText);

@@ -55,8 +55,12 @@ function editprofile(lineUserId) {
                                 type: 'text',
                                 text: '修改成功'
                             }
-                        ]);
-                        liff.closeWindow();
+                        ]).then(function () {
+                            liff.closeWindow();
+                        }).catch(function (err) {
+                            console.log(err);
+                            alert('好像出錯了，請聯絡工作人員');
+                        })
                     },
                     error: function (jqXHR) {
                         alert(jqXHR.responseText);

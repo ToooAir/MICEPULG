@@ -28,11 +28,6 @@ function addComment(lineUserId, id) {
                 url: "/addcomment",
                 dataType: "json",
                 success: function (data) {
-                    // name = data["name"];
-                    // time = data["time"];
-                    // const result = "<div><label>" + name + " " + time + " " + input + "</label></div >";
-                    // $('#comment').val('');
-                    // $('#comment_list').append(result);
                     location.reload();
                 },
                 error: function (jqXHR) {
