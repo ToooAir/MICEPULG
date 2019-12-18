@@ -8,12 +8,19 @@ from time import time
 from datetime import datetime
 from random import random
 
+
 def getUser(line_user_id):
     session = DB_session()
     user = session.query(User).filter(User.line_user_id == line_user_id).one()
     session.close()
 
     return user
+
+
+def complex_add_user(linse_user_id, name, email, intro, link, picture, job, tag1, tag2, tag3):
+    User.add(line_user_id=linse_user_id, name=name, email=email,
+             intro=intro, link=link, picture=picture)
+
 
 def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
     session = DB_session()
@@ -32,21 +39,21 @@ def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture
 
 def importUser(bindId, name, id, email, job, intro, link, tag1, tag2, tag3, picture, ticket, qrcode=None):
     session = DB_session()
-    
+
     addUser = User(bind_id=bindId, name=name, id=id, email=email,
                    intro=intro, link=link, picture=picture, qrcode=qrcode)
-    
+
     session.add(addUser)
     session.commit()
 
     detail = UserDetail(user_id=id, field_a=job,
                         field_b=tag1, field_c=tag2, field_d=tag3)
-    
+
     tags = Tags(user_id=id, tag_name="ticket", tag_value=ticket)
-    
+
     session.add(detail)
     session.add(tags)
-    
+
     session.commit()
     session.close()
 
@@ -73,14 +80,15 @@ def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, pictur
 
 def unbindUser(lineUserId):
     session = DB_session()
-    
+
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
 
     if user is None:
         return False
     else:
-        comments = session.query(Comment).filter(Comment.sender == lineUserId).all()
-        
+        comments = session.query(Comment).filter(
+            Comment.sender == lineUserId).all()
+
         for comment in comments:
             session.delete(comment)
         session.commit()
@@ -180,16 +188,19 @@ def getName(lineUserId):
 
 def getComments(user_id):
     session = DB_session()
-    
-    comments = session.query(Comment).filter(Comment.receiver == user_id).order_by(desc(Comment.create_time)).all()
+
+    comments = session.query(Comment).filter(
+        Comment.receiver == user_id).order_by(desc(Comment.create_time)).all()
     output = []
-    
+
     for comment in comments:
-        time = datetime.fromtimestamp(comment.create_time).strftime('%Y-%m-%d %H:%M')
-        output.append({"name": comment.user.name, "time": time, "content": comment.content})
-    
+        time = datetime.fromtimestamp(
+            comment.create_time).strftime('%Y-%m-%d %H:%M')
+        output.append({"name": comment.user.name, "time": time,
+                       "content": comment.content})
+
     session.close()
-    
+
     return output
 
 

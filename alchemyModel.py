@@ -7,7 +7,25 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
-class User(Base):
+def session(func):
+    def wrapper():
+        session = create_session()
+        obj = func()
+        session.add(obj)
+        session.commit()
+        session.close()
+    return wrapper
+
+
+class BaseOrm:
+
+    @session
+    @classmethod
+    def add(cls, **kwargs):
+        return cls(**kwargs)
+
+
+class User(Base, BaseOrm):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     bind_id = Column('bind_id', String(4))
@@ -22,7 +40,7 @@ class User(Base):
     qrcode = Column('qrcode', String(32))
 
 
-class UserDetail(Base):
+class UserDetail(Base, BaseOrm):
     __tablename__ = 'user_detail'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey(

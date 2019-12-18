@@ -24,18 +24,21 @@ from linebot.models import (
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
 
+
 def setPicture(user):
     if user['picture'] == "":
         return config['default_avater']
     else:
         return user["picture"]
 
+
 def setResponse(data):
     resp = make_response(json_dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    
+
     return resp
+
 
 app = Flask(__name__)
 
@@ -44,6 +47,7 @@ app = Flask(__name__)
 def before_req():
     g.startTime = time()
     g.uuid = str(uuid1())
+
 
 @app.context_processor
 def utility_processor():
@@ -95,7 +99,7 @@ def bind():
         return "此驗證碼不存在，請確認你的驗證碼或洽詢現場工作人員。"
     elif(alchemyFunc.checkRepeat(bindId)):
         return "此驗證碼已使用過，請確認你的驗證碼或洽詢現場工作人員。"
-    
+
     alchemyFunc.bindUser(bindId, lineUserId)
 
     resp = setResponse(data)
@@ -120,14 +124,15 @@ def register():
     tag2 = data["tag2"]
     tag3 = data["tag3"]
 
-    imageurl = ""
+    imageurl = config['default_avater']
     if "image" in request.files:
-        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
-        imageurl = uploadImage(request.files["image"],filename)
-    else:
-        imageurl = config['default_avater']
+        filename = ßstr(uuid1()) + "." + \
+            request.files["image"].filename.split(".")[-1]
+        imageurl = uploadImage(request.files["image"], filename)
 
-    alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
+    User.add(**request.form, picture=imageurl)
+    UserDetail.add(user_id=id, field_a=job,
+                   field_b=tag1, field_c=tag2, field_d=tag3)
 
     resp = setResponse(name)
 
@@ -150,19 +155,19 @@ def editprofile():
     tag2 = data["tag2"]
     tag3 = data["tag3"]
 
-    filename = alchemyFunc.getPicture(lineUserId)
-    imageurl = ""
-    
+    filename = alchemyFunc.getPicture(request.data["lineUserId"])
+
+    imageurl = filename
     if "image" in request.files:
         if filename != config['default_avater']:
             deleteImage(filename)
-        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
-        imageurl = uploadImage(request.files["image"],filename)
-    else:
-        imageurl = filename
+        filename = str(uuid1()) + "." + \
+            request.files["image"].filename.split(".")[-1]
+        imageurl = uploadImage(request.files["image"], filename)
 
-    alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
-    
+    alchemyFunc.editUser(lineUserId, name, email, job,
+                         intro, link, tag1, tag2, tag3, imageurl)
+
     resp = setResponse(name)
 
     alchemyFunc.addLogs(lineUserId, "edit", "", g.startTime)
@@ -232,7 +237,7 @@ def message_text(event):
         try:
             find = text.split("#")[1]
 
-            user = alchemyFunc.findSomeone(find)       
+            user = alchemyFunc.findSomeone(find)
             picture = setPicture(user)
 
             flex = json_load(render_template(
@@ -253,10 +258,11 @@ def message_text(event):
     # Bind
     elif(text.startswith("#") and len(text[1:]) == 4):
         line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text="登入成功，請將您的個人專屬編號寫上號碼牌： #{}".format(alchemyFunc.getUser(lineUserId).id))
-                ]
-            )
+            event.reply_token, [
+                TextSendMessage(text="登入成功，請將您的個人專屬編號寫上號碼牌： #{}".format(
+                    alchemyFunc.getUser(lineUserId).id))
+            ]
+        )
 
     elif(text == "修改成功"):
         user = alchemyFunc.getProfile(lineUserId)
@@ -271,11 +277,11 @@ def message_text(event):
 
     elif(text == "我要註冊"):
         line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text="註冊成功，請將您的個人專屬編號寫上號碼牌： #{}".format(alchemyFunc.getUser(lineUserId).id))
-                ]
-            )
-
+            event.reply_token, [
+                TextSendMessage(text="註冊成功，請將您的個人專屬編號寫上號碼牌： #{}".format(
+                    alchemyFunc.getUser(lineUserId).id))
+            ]
+        )
 
     elif(text == "/reset"):
         alchemyFunc.unbindUser(lineUserId)
@@ -289,10 +295,11 @@ def message_text(event):
 
         alchemyFunc.addLogs(lineUserId, "reset", "", g.startTime)
 
+
 @handler.add(FollowEvent)
 def handleFollow(event):
     lineUserId = event.source.user_id
-    
+
     alchemyFunc.addFollow(lineUserId, g.startTime)
     alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime)
 
@@ -342,6 +349,7 @@ def handlePostback(event):
         )
 
         alchemyFunc.addLogs(lineUserId, text, "", g.startTime)
+
 
 if __name__ == "__main__":
     app.run()
