@@ -50,6 +50,7 @@ def before_req():
     g.config = config
 
 
+
 @app.context_processor
 def utility_processor():
     def setuuid(static):
@@ -126,7 +127,7 @@ def register():
     tag2 = data["tag2"]
     tag3 = data["tag3"]
 
-    imageurl = ""
+    imageurl = config['default_avater']
     if "image" in request.files:
         filename = str(uuid1()) + "." + \
             request.files["image"].filename.split(".")[-1]
@@ -134,8 +135,9 @@ def register():
     else:
         imageurl = config['default_avater']
 
-    alchemyFunc.addUser(lineUserId, name, email, job, intro,
-                        link, tag1, tag2, tag3, imageurl)
+    User.add(**request.form, picture=imageurl)
+    UserDetail.add(user_id=id, field_a=job,
+                   field_b=tag1, field_c=tag2, field_d=tag3)
 
     resp = setResponse(name)
 
