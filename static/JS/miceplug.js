@@ -1,11 +1,13 @@
 window.onload = function (e) {
+    var data = "U80652db48632d5c313b01e447b79510c";
+    initializeApp(data);
     liff.init(function (data) {
         initializeApp(data);
     });
 };
 
-function initializeApp(data) {
-    var lineUserId = data.context.userId;
+function initializeApp(data) 
+    var lineUserId = data;
     var path = window.location.pathname
 
     if(path.indexOf("login")!=-1){
