@@ -5,7 +5,7 @@ window.onload = function (e) {
 };
 
 function initializeApp(data) {
-    var lineUserId = ddata.context.userId;
+    var lineUserId = data.context.userId;
     var path = window.location.pathname
 
     if(path.indexOf("login")!=-1){
