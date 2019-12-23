@@ -24,18 +24,21 @@ from linebot.models import (
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
 
+
 def setPicture(user):
     if user['picture'] == "":
         return config['default_avater']
     else:
         return user["picture"]
 
+
 def setResponse(data):
     resp = make_response(json_dumps(data))
     resp.status_code = 200
     resp.headers["Access-Control-Allow-Origin"] = "*"
-    
+
     return resp
+
 
 app = Flask(__name__)
 
@@ -46,32 +49,33 @@ def before_req():
     g.uuid = str(uuid1())
     g.config = config
 
+
 @app.context_processor
 def utility_processor():
     def setuuid(static):
         return static+"?v="+g.uuid
-    
+
     return {'setuuid': setuuid}
 
 # website
 @app.route("/login", methods=["GET"])
 def login():
-    return render_template("login.html")
+    return render_template("login.html", title="登入")
 
 
 @app.route("/signup", methods=["GET"])
 def signup():
-    return render_template("signup.html")
+    return render_template("signup.html", title="註冊")
 
 
 @app.route("/edit", methods=["GET"])
 def edit():
-    return render_template("edit.html")
+    return render_template("edit.html", title="個人資料")
 
 
 @app.route("/find", methods=["GET"])
 def find():
-    return render_template("find.html")
+    return render_template("find.html", title="找人")
 
 
 @app.route("/comment", methods=["GET"])
@@ -79,7 +83,7 @@ def comment():
     id = request.args.get('id')
     name = alchemyFunc.findSomeone(id)["name"]
     output = alchemyFunc.getComments(id)
-    return render_template("comment.html", name=name, output=output)
+    return render_template("comment.html", name=name, output=output, title="留言")
 
 
 @app.route("/static/<path:path>")
@@ -97,7 +101,7 @@ def bind():
         return "此驗證碼不存在，請確認你的驗證碼或洽詢現場工作人員。"
     elif(alchemyFunc.checkRepeat(bindId)):
         return "此驗證碼已使用過，請確認你的驗證碼或洽詢現場工作人員。"
-    
+
     alchemyFunc.bindUser(bindId, lineUserId)
 
     resp = setResponse(data)
@@ -124,12 +128,14 @@ def register():
 
     imageurl = ""
     if "image" in request.files:
-        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
-        imageurl = uploadImage(request.files["image"],filename)
+        filename = str(uuid1()) + "." + \
+            request.files["image"].filename.split(".")[-1]
+        imageurl = uploadImage(request.files["image"], filename)
     else:
         imageurl = config['default_avater']
 
-    alchemyFunc.addUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
+    alchemyFunc.addUser(lineUserId, name, email, job, intro,
+                        link, tag1, tag2, tag3, imageurl)
 
     resp = setResponse(name)
 
@@ -154,17 +160,19 @@ def editprofile():
 
     filename = alchemyFunc.getPicture(lineUserId)
     imageurl = ""
-    
+
     if "image" in request.files:
         if filename != config['default_avater']:
             deleteImage(filename)
-        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
-        imageurl = uploadImage(request.files["image"],filename)
+        filename = str(uuid1()) + "." + \
+            request.files["image"].filename.split(".")[-1]
+        imageurl = uploadImage(request.files["image"], filename)
     else:
         imageurl = filename
 
-    alchemyFunc.editUser(lineUserId,name,email,job,intro,link,tag1,tag2,tag3,imageurl)
-    
+    alchemyFunc.editUser(lineUserId, name, email, job,
+                         intro, link, tag1, tag2, tag3, imageurl)
+
     resp = setResponse(name)
 
     alchemyFunc.addLogs(lineUserId, "edit", "", g.startTime)
@@ -234,7 +242,7 @@ def message_text(event):
         try:
             find = text.split("#")[1]
 
-            user = alchemyFunc.findSomeone(find)       
+            user = alchemyFunc.findSomeone(find)
             picture = setPicture(user)
 
             flex = json_load(render_template(
@@ -255,10 +263,11 @@ def message_text(event):
     # Bind
     elif(text.startswith("#") and len(text[1:]) == 4):
         line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text="登入成功，請將您的個人專屬編號寫上號碼牌： #{}".format(alchemyFunc.getUser(lineUserId).id))
-                ]
-            )
+            event.reply_token, [
+                TextSendMessage(text="登入成功，請將您的個人專屬編號寫上號碼牌： #{}".format(
+                    alchemyFunc.getUser(lineUserId).id))
+            ]
+        )
 
     elif(text == "修改成功"):
         user = alchemyFunc.getProfile(lineUserId)
@@ -273,11 +282,11 @@ def message_text(event):
 
     elif(text == "我要註冊"):
         line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text="註冊成功，請將您的個人專屬編號寫上號碼牌： #{}".format(alchemyFunc.getUser(lineUserId).id))
-                ]
-            )
-
+            event.reply_token, [
+                TextSendMessage(text="註冊成功，請將您的個人專屬編號寫上號碼牌： #{}".format(
+                    alchemyFunc.getUser(lineUserId).id))
+            ]
+        )
 
     elif(text == "/reset"):
         alchemyFunc.unbindUser(lineUserId)
@@ -291,10 +300,11 @@ def message_text(event):
 
         alchemyFunc.addLogs(lineUserId, "reset", "", g.startTime)
 
+
 @handler.add(FollowEvent)
 def handleFollow(event):
     lineUserId = event.source.user_id
-    
+
     alchemyFunc.addFollow(lineUserId, g.startTime)
     alchemyFunc.addLogs(lineUserId, "follow", "", g.startTime)
 
@@ -344,6 +354,7 @@ def handlePostback(event):
         )
 
         alchemyFunc.addLogs(lineUserId, text, "", g.startTime)
+
 
 if __name__ == "__main__":
     app.run()
