@@ -4,7 +4,7 @@ window.onload = function (e) {
     });
 };
 
-function initializeApp(data) 
+function initializeApp(data) {
     var lineUserId = data.context.userId;
     var path = window.location.pathname
 
