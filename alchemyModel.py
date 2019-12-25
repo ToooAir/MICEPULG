@@ -1,4 +1,4 @@
-from alchemyStart import engine
+from alchemyStart import engine , DB_session
 
 from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
@@ -8,24 +8,23 @@ Base = declarative_base()
 
 
 def session(func):
-    def wrapper():
-        session = create_session()
-        obj = func()
+    def wrapper(self,**kwargs):
+        session = DB_session()
+        obj = func(self,**kwargs)
         session.add(obj)
         session.commit()
         session.close()
     return wrapper
 
 
-class BaseOrm:
-
-    @session
+class BaseOrm(object):
     @classmethod
-    def add(cls, **kwargs):
+    @session
+    def create(cls, **kwargs):
         return cls(**kwargs)
 
 
-class User(Base, BaseOrm):
+class User(Base,BaseOrm):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     bind_id = Column('bind_id', String(4))
@@ -38,6 +37,7 @@ class User(Base, BaseOrm):
     comment = relationship("Comment", backref="user", lazy='dynamic',
                            cascade='all, delete-orphan', passive_deletes=True)
     qrcode = Column('qrcode', String(32))
+
 
 
 class UserDetail(Base, BaseOrm):
