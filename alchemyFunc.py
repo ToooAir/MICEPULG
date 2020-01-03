@@ -75,7 +75,6 @@ def unbind_user(lineUserId):
         user.line_user_id = null()
 
         return True
-unbind_user("LOL")
 
 
 @session_commit

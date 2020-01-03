@@ -50,7 +50,6 @@ def before_req():
     g.config = config
 
 
-
 @app.context_processor
 def utility_processor():
     def setuuid(static):
@@ -59,32 +58,22 @@ def utility_processor():
     return {'setuuid': setuuid}
 
 # website
-@app.route("/login", methods=["GET"])
-def login():
-    return render_template("login.html", title="登入")
-
-
-@app.route("/signup", methods=["GET"])
-def signup():
-    return render_template("signup.html", title="註冊")
-
-
-@app.route("/edit", methods=["GET"])
-def edit():
-    return render_template("edit.html", title="個人資料")
-
-
-@app.route("/find", methods=["GET"])
-def find():
-    return render_template("find.html", title="找人")
-
-
-@app.route("/comment", methods=["GET"])
-def comment():
-    id = request.args.get('id')
-    name = alchemyFunc.find_someone(id)["name"]
-    output = alchemyFunc.get_comments(id)
-    return render_template("comment.html", name=name, output=output, title="留言")
+@app.route("/", methods=["GET"])
+def index():
+    page = request.args.get("page")
+    if page == "login":
+        return render_template("login.html", title="登入")
+    elif page == "signup":
+        return render_template("signup.html", title="註冊")
+    elif page == "edit":
+        return render_template("edit.html", title="個人資料")
+    elif page == "find":
+        return render_template("find.html", title="找人")
+    elif page == "comment":
+        id = request.args.get('id')
+        name = alchemyFunc.find_someone(id)["name"]
+        output = alchemyFunc.get_comments(id)
+        return render_template("comment.html", name=name, output=output, title="留言")
 
 
 @app.route("/static/<path:path>")
@@ -126,7 +115,7 @@ def register():
     else:
         imageurl = config['default_avater']
 
-    alchemyFunc.add_user(**request.form,picture=imageurl)
+    alchemyFunc.add_user(**request.form, picture=imageurl)
 
     resp = setResponse(name)
 
@@ -153,7 +142,7 @@ def editprofile():
     else:
         imageurl = filename
 
-    alchemyFunc.edit_user(**request.form,picture=imageurl)
+    alchemyFunc.edit_user(**request.form, picture=imageurl)
 
     resp = setResponse(name)
 
@@ -218,7 +207,7 @@ def message_text(event):
             picture = setPicture(user)
 
             flex = json_load(render_template(
-                'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
+                'Find.json', user=user, picture=picture, comment=config['liff']+"?page=comment"), strict=False)
             line_bot_api.reply_message(
                 event.reply_token, [
                     FlexSendMessage(alt_text=text, contents=flex)
@@ -246,7 +235,7 @@ def message_text(event):
         picture = setPicture(user)
 
         flex = json_load(render_template(
-            'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
+            'Me.json', user=user, picture=picture, edit=config['liff']+"?page=edit", comment=config['liff']+"?page=comment"), strict=False)
         line_bot_api.reply_message(
             event.reply_token,
             FlexSendMessage(alt_text=text, contents=flex)
@@ -292,7 +281,7 @@ def handlePostback(event):
         picture = setPicture(user)
 
         flex = json_load(render_template(
-            'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
+            'Me.json', user=user, picture=picture, edit=config['liff']+"?page=edit", comment=config['liff']+"?page=comment"), strict=False)
         line_bot_api.reply_message(
             event.reply_token,
             FlexSendMessage(alt_text=text, contents=flex)
@@ -306,7 +295,7 @@ def handlePostback(event):
         picture = setPicture(user)
 
         flex = json_load(render_template(
-            'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
+            'Find.json', user=user, picture=picture, comment=config['liff']+"?page=comment"), strict=False)
         line_bot_api.reply_message(
             event.reply_token, [
                 FlexSendMessage(alt_text=text, contents=flex)
