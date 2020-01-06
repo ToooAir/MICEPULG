@@ -1,6 +1,6 @@
-from config import config
-
 from google.cloud import storage
+
+from config import config
 
 
 def uploadImage(image, filename):
