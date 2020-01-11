@@ -1,10 +1,8 @@
-from json import loads as json_load
-from flask import render_template, Flask
+from account.models import User
+# from utils.decorator import add_logs
+from uuid import uuid1
 
-from config import config
-
-app = Flask(__name__)
-
+g="name"
 
 def test1(func):
     def wrapper(*args, **kwargs):
@@ -23,26 +21,34 @@ def test2(func):
 
     return wrapper
 
+def test3(name):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            print("test3 start"+name)
+            func(*args, **kwargs)
+            print("test3 end"+name)
+        return wrapper
+    return decorator
 
 @test1
 @test2
-def test3(name):
+@test3("GG")
+def test4(name):
+    myname = "haohao"
     print(name)
 
 
-# test4 = test3("GG")
+# test5 = test4(g)
 
-flex = json_load(
-    render_template(
-        "Me.json",
-        user="123",
-        picture="456",
-        edit=config["liff"] + "?page=edit",
-        comment=config["liff"] + "?page=comment",
-    ),
-    strict=False,
-)
-print(flex)
-# line_bot_api.reply_message(
-#     event.reply_token, FlexSendMessage(alt_text=text, contents=flex)
-# )
+def set_attribute(*args,**kwargs):
+    for key, value in kwargs.items():
+        setattr(*args,key,value)
+
+user = User.get(id=1)
+# print(user.name,user.email)
+set_attribute(user,name="lol",email="WTF")
+# setattr(user,'name','lol')
+print(user.name,user.email)
+
+# for num in range(0,100000):
+#     print(str(uuid1()))

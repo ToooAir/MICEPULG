@@ -1,32 +1,13 @@
+from datetime import datetime
+from time import time
+
 from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import text
+from sqlalchemy.sql.expression import func
 
-from alchemyStart import db_session, engine
-
-
-def session_orm(func):
-    def wrapper(cls, *args, **kwargs):
-        response = func(cls, *args, **kwargs)
-        db_session.commit()
-        return response
-
-    return wrapper
-
-
-class BaseOrm(object):
-    @classmethod
-    @session_orm
-    def add(cls, **kwargs):
-        db_session.add(cls(**kwargs))
-
-
-class _Base(object):
-    query = db_session.query_property()
-
-
-Base = declarative_base(cls=_Base)
+from utils import engine
+from utils.models import Base, BaseOrm
 
 
 class User(Base, BaseOrm):
@@ -47,6 +28,10 @@ class User(Base, BaseOrm):
         passive_deletes=True,
     )
     qrcode = Column("qrcode", String(32))
+
+    @classmethod
+    def rand(cls, **kwargs):
+        return cls.query.order_by(func.rand()).first()
 
 
 class UserDetail(Base, BaseOrm):
@@ -78,6 +63,10 @@ class Logs(Base, BaseOrm):
     ip = Column("ip", String(40))
     spend_ms = Column("spend_ms", Integer)
 
+    def format(**kwargs):
+        spend = round((time() - int(kwargs["create_time"])) * 1000)
+        Logs.add(**kwargs, spend_ms=spend)
+
 
 class Followers(Base, BaseOrm):
     __tablename__ = "followers"
@@ -95,6 +84,18 @@ class Comment(Base, BaseOrm):
     )
     receiver = Column("receiver", String(64))
     content = Column("content", Text)
+
+    def get_dict_order_by_time(**kwargs):
+        comments = Comment.query.filter_by(**kwargs).order_by(Comment.create_time).all()
+        output = []
+        for comment in comments:
+            time = datetime.fromtimestamp(comment.create_time).strftime(
+                "%Y-%m-%d %H:%M"
+            )
+            output.append(
+                {"name": comment.user.name, "time": time, "content": comment.content}
+            )
+        return output
 
 
 Base.metadata.create_all(engine)

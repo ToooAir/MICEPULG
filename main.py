@@ -24,8 +24,10 @@ from linebot.models import (
     TextSendMessage,
 )
 
-import alchemyFunc
-from cloudStorage import deleteImage, uploadImage
+# import alchemyFunc
+from utils.decorator import add_logs, session_commit
+from utils.cloudStorage import deleteImage, uploadImage
+from account.models import User, UserDetail, Comment, Followers, Logs
 from config import config
 
 # config
@@ -33,11 +35,11 @@ line_bot_api = LineBotApi(config["LINE_CHANNEL_ACCESS_TOKEN"])
 handler = WebhookHandler(config["LINE_CHANNEL_SECRET"])
 
 
-def setPicture(user):
-    if user["picture"] == "":
+def setPicture(profile):
+    if profile["picture"] == "":
         return config["default_avater"]
     else:
-        return user["picture"]
+        return profile["picture"]
 
 
 def setResponse(data):
@@ -46,6 +48,12 @@ def setResponse(data):
     resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
+
+
+@session_commit
+def set_attribute(*args, **kwargs):
+    for key, value in kwargs.items():
+        setattr(*args, key, value)
 
 
 app = Flask(__name__)
@@ -80,8 +88,8 @@ def index():
         return render_template("find.html", title="找人")
     elif page == "comment":
         id = request.args.get("id")
-        name = alchemyFunc.find_someone(id)["name"]
-        output = alchemyFunc.get_comments(id)
+        name = User.get(id=id).name
+        output = Comment.get_dict_order_by_time(receiver=id)
         return render_template("comment.html", name=name, output=output, title="留言")
 
 
@@ -96,24 +104,27 @@ def bind():
     bindId = request.form["bindId"]
     lineUserId = request.form["lineUserId"]
 
-    if alchemyFunc.check_nonexist(bindId):
+    user = User.get(bind_id=bindId)
+
+    if user == None:
         return "此驗證碼不存在，請確認你的驗證碼或洽詢現場工作人員。"
-    elif alchemyFunc.check_repeat(bindId):
+    elif user.line_user_id != None:
         return "此驗證碼已使用過，請確認你的驗證碼或洽詢現場工作人員。"
 
-    alchemyFunc.bind_user(bindId, lineUserId)
+    set_attribute(user, line_user_id=lineUserId)
 
     resp = setResponse(request.form)
 
     line_bot_api.link_rich_menu_to_user(lineUserId, config["richmenu"]["menu"])
 
-    alchemyFunc.add_logs(lineUserId, "bind", "", g.startTime)
+    Logs.format(line_user_id=lineUserId,comand="bind",create_time=g.startTime)
 
     return resp
 
 
 @app.route("/register", methods=["POST"])
 def register():
+    form = request.form
     lineUserId = request.form["lineUserId"]
     name = request.form["name"]
 
@@ -124,22 +135,37 @@ def register():
     else:
         imageurl = config["default_avater"]
 
-    alchemyFunc.add_user(**request.form, picture=imageurl)
+    User.add(
+        line_user_id=form["lineUserId"],
+        name=form["name"],
+        email=form["email"],
+        intro=form["intro"],
+        link=form["link"],
+        picture=imageurl,
+    )
+    UserDetail.add(
+        user_id=User.get(line_user_id=lineUserId).id,
+        field_a=form["job"],
+        field_b=form["tag1"],
+        field_c=form["tag2"],
+        field_d=form["tag3"],
+    )
 
     resp = setResponse(name)
 
     line_bot_api.link_rich_menu_to_user(lineUserId, config["richmenu"]["menu"])
-    alchemyFunc.add_logs(lineUserId, "register", "", g.startTime)
+    Logs.format(line_user_id=lineUserId,comand="register",create_time=g.startTime)
 
     return resp
 
 
 @app.route("/editprofile", methods=["POST"])
 def editprofile():
+    form = request.form
     lineUserId = request.form["lineUserId"]
     name = request.form["name"]
 
-    filename = alchemyFunc.get_picture(lineUserId)
+    filename = str(User.get(line_user_id=lineUserId).picture)
     imageurl = ""
 
     if "image" in request.files:
@@ -150,19 +176,48 @@ def editprofile():
     else:
         imageurl = filename
 
-    alchemyFunc.edit_user(**request.form, picture=imageurl)
+    user = User.get(line_user_id=lineUserId)
+    set_attribute(
+        user,
+        name=form["name"],
+        email=form["email"],
+        intro=form["intro"],
+        link=form["link"],
+        picture=imageurl,
+    )
+    set_attribute(
+        UserDetail.get(user_id=user.id),
+        field_a=form["job"],
+        field_b=form["tag1"],
+        field_c=form["tag2"],
+        field_d=form["tag3"],
+    )
 
     resp = setResponse(name)
 
-    alchemyFunc.add_logs(lineUserId, "edit", "", g.startTime)
+    Logs.format(line_user_id=lineUserId,comand="edit",create_time=g.startTime)
     return resp
 
 
 @app.route("/getprofile", methods=["POST"])
 def getprofile():
     lineUserId = request.form["lineUserId"]
+    user = User.get(line_user_id=lineUserId)
+    detail = UserDetail.get(user_id=user.id)
 
-    profile = alchemyFunc.get_profile(lineUserId)
+    profile = {
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "job": detail.field_a,
+        "intro": user.intro,
+        "link": user.link,
+        "picture": user.picture,
+        "tag1": detail.field_b,
+        "tag2": detail.field_c,
+        "tag3": detail.field_d,
+        "qrcode": user.qrcode,
+    }
 
     resp = setResponse(profile)
 
@@ -176,9 +231,9 @@ def addComment():
     comment = request.form["comment"]
     ts = int(time())
 
-    alchemyFunc.add_comments(lineUserId, id, comment, ts)
+    Comment.add(create_time=ts, sender=lineUserId, receiver=id, content=comment)
 
-    alchemyFunc.add_logs(lineUserId, "addcomment", "", g.startTime)
+    Logs.format(line_user_id=lineUserId,comand="addcomment",create_time=g.startTime)
 
     resp = setResponse(id)
 
@@ -209,15 +264,30 @@ def message_text(event):
     # Find
     if text.startswith("#") and text[1:].isdigit():
         try:
-            find = text.split("#")[1]
+            id = text.split("#")[1]
 
-            user = alchemyFunc.find_someone(find)
-            picture = setPicture(user)
+            user = User.get(id=id)
+            detail = UserDetail.get(user_id=user.id)
+
+            profile = {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "job": detail.field_a,
+                "intro": user.intro,
+                "link": user.link,
+                "picture": user.picture,
+                "tag1": detail.field_b,
+                "tag2": detail.field_c,
+                "tag3": detail.field_d,
+            }
+
+            picture = setPicture(profile)
 
             flex = json_load(
                 render_template(
                     "Find.json",
-                    user=user,
+                    user=profile,
                     picture=picture,
                     comment=config["liff"] + "?page=comment",
                 ),
@@ -226,7 +296,6 @@ def message_text(event):
             line_bot_api.reply_message(
                 event.reply_token, [FlexSendMessage(alt_text=text, contents=flex)]
             )
-            alchemyFunc.add_logs(lineUserId, "find", "", g.startTime)
         except:
             line_bot_api.reply_message(
                 event.reply_token, [TextSendMessage(text="查無此人")]
@@ -238,19 +307,34 @@ def message_text(event):
             event.reply_token,
             [
                 TextSendMessage(
-                    text=f"登入成功，請將您的個人專屬編號寫上號碼牌： #{alchemyFunc.get_user(lineUserId).id}"
+                    text=f"登入成功，請將您的個人專屬編號寫上號碼牌： #{User.get(line_user_id=lineUserId).id}"
                 )
             ],
         )
 
     elif text == "修改成功":
-        user = alchemyFunc.get_profile(lineUserId)
-        picture = setPicture(user)
+        user = User.get(line_user_id=lineUserId)
+        detail = UserDetail.get(user_id=user.id)
+
+        profile = {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "job": detail.field_a,
+            "intro": user.intro,
+            "link": user.link,
+            "picture": user.picture,
+            "tag1": detail.field_b,
+            "tag2": detail.field_c,
+            "tag3": detail.field_d,
+            "qrcode": user.qrcode,
+        }
+        picture = setPicture(profile)
 
         flex = json_load(
             render_template(
                 "Me.json",
-                user=user,
+                user=profile,
                 picture=picture,
                 edit=config["liff"] + "?page=edit",
                 comment=config["liff"] + "?page=comment",
@@ -266,26 +350,30 @@ def message_text(event):
             event.reply_token,
             [
                 TextSendMessage(
-                    text=f"註冊成功，請將您的個人專屬編號寫上號碼牌： #{alchemyFunc.get_user(lineUserId).id}"
+                    text=f"註冊成功，請將您的個人專屬編號寫上號碼牌： #{User.get(line_user_id=lineUserId).id}"
                 )
             ],
         )
 
     elif text == "/reset":
-        alchemyFunc.unbind_user(lineUserId)
+        user = User.get(line_user_id=lineUserId)
 
-        line_bot_api.unlink_rich_menu_from_user(lineUserId)
-        line_bot_api.reply_message(event.reply_token, [TextSendMessage(text="已重置")])
+        if user != None:
+            Comment.delete(sender=lineUserId)
+            set_attribute(user, line_user_id=None)
+            line_bot_api.unlink_rich_menu_from_user(lineUserId)
+            line_bot_api.reply_message(event.reply_token, [TextSendMessage(text="已重置")])
 
-        alchemyFunc.add_logs(lineUserId, "reset", "", g.startTime)
+    Logs.format(line_user_id=lineUserId,comand=text,create_time=g.startTime)
 
 
 @handler.add(FollowEvent)
 def handleFollow(event):
     lineUserId = event.source.user_id
 
-    alchemyFunc.add_follow(lineUserId, g.startTime)
-    alchemyFunc.add_logs(lineUserId, "follow", "", g.startTime)
+    Followers.add(line_user_id=lineUserId, create_time=g.startTime)
+    Logs.format(line_user_id=lineUserId,comand="follow",create_time=g.startTime)
+    
 
 
 @handler.add(PostbackEvent)
@@ -295,13 +383,28 @@ def handlePostback(event):
 
     if text == "個人資料":
 
-        user = alchemyFunc.get_profile(lineUserId)
-        picture = setPicture(user)
+        user = User.get(line_user_id=lineUserId)
+        detail = UserDetail.get(user_id=user.id)
+
+        profile = {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "job": detail.field_a,
+            "intro": user.intro,
+            "link": user.link,
+            "picture": user.picture,
+            "tag1": detail.field_b,
+            "tag2": detail.field_c,
+            "tag3": detail.field_d,
+            "qrcode": user.qrcode,
+        }
+        picture = setPicture(profile)
 
         flex = json_load(
             render_template(
                 "Me.json",
-                user=user,
+                user=profile,
                 picture=picture,
                 edit=config["liff"] + "?page=edit",
                 comment=config["liff"] + "?page=comment",
@@ -312,17 +415,31 @@ def handlePostback(event):
             event.reply_token, FlexSendMessage(alt_text=text, contents=flex)
         )
 
-        alchemyFunc.add_logs(lineUserId, text, "", g.startTime)
-
     elif text == "抽卡":
 
-        user = alchemyFunc.draw_card()
-        picture = setPicture(user)
+        user = User.rand()
+        detail = UserDetail.get(user_id=user.id)
+
+        profile = {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "job": detail.field_a,
+            "intro": user.intro,
+            "link": user.link,
+            "picture": user.picture,
+            "tag1": detail.field_b,
+            "tag2": detail.field_c,
+            "tag3": detail.field_d,
+            "qrcode": user.qrcode,
+        }
+
+        picture = setPicture(profile)
 
         flex = json_load(
             render_template(
                 "Find.json",
-                user=user,
+                user=profile,
                 picture=picture,
                 comment=config["liff"] + "?page=comment",
             ),
@@ -332,8 +449,6 @@ def handlePostback(event):
             event.reply_token, [FlexSendMessage(alt_text=text, contents=flex)]
         )
 
-        alchemyFunc.add_logs(lineUserId, text, "", g.startTime)
-
     elif text == "活動資訊":
 
         flex = json_load(render_template("Event.json"), strict=False)
@@ -341,7 +456,7 @@ def handlePostback(event):
             event.reply_token, [FlexSendMessage(alt_text=text, contents=flex)]
         )
 
-        alchemyFunc.add_logs(lineUserId, text, "", g.startTime)
+    Logs.format(line_user_id=lineUserId,comand=text,create_time=g.startTime)
 
 
 if __name__ == "__main__":

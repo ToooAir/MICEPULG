@@ -23,6 +23,5 @@ def deleteImage(url):
     filename = url.split("/")[-1]
 
     blob = bucket.blob("avatar/" + filename)
-    print(blob.exists())
     if blob.exists():
         blob.delete()
