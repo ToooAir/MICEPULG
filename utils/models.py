@@ -1,15 +1,14 @@
 from sqlalchemy.ext.declarative import declarative_base
 
+from utils.decorator import session_commit, session_orm
+
 from . import db_session, engine
 
 
-def session_orm(func):
-    def wrapper(cls, *args, **kwargs):
-        response = func(cls, *args, **kwargs)
-        db_session.commit()
-        return response
-
-    return wrapper
+@session_commit
+def set_attribute(*args, **kwargs):
+    for key, value in kwargs.items():
+        setattr(*args, key, value)
 
 
 class BaseOrm(object):

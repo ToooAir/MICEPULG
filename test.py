@@ -1,5 +1,4 @@
 from account.models import User
-# from utils.decorator import add_logs
 from uuid import uuid1
 
 g="name"
@@ -38,17 +37,12 @@ def test4(name):
     print(name)
 
 
-# test5 = test4(g)
+test5 = test4(g)
 
 def set_attribute(*args,**kwargs):
     for key, value in kwargs.items():
         setattr(*args,key,value)
 
 user = User.get(id=1)
-# print(user.name,user.email)
 set_attribute(user,name="lol",email="WTF")
-# setattr(user,'name','lol')
 print(user.name,user.email)
-
-# for num in range(0,100000):
-#     print(str(uuid1()))
