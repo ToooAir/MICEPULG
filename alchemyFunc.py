@@ -8,125 +8,104 @@ from time import time
 from datetime import datetime
 from random import random
 
-def getUser(line_user_id):
-    session = DB_session()
+session = DB_session()
+
+
+def session_commit(func):
+    def wrapper(*args, **kwarg):
+        func(*args, **kwarg)
+        session.commit()
+    return wrapper
+
+
+def get_user(line_user_id):
     user = session.query(User).filter(User.line_user_id == line_user_id).one()
-    session.close()
 
     return user
 
-def addUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
-    session = DB_session()
-    addUser = User(line_user_id=lineUserId, name=name, email=email,
-                   intro=intro, link=link, picture=picture)
-    session.add(addUser)
-    session.commit()
+
+def add_user(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
+    User.add(line_user_id=lineUserId, name=name, email=email,
+             intro=intro, link=link, picture=picture)
+
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
-    id = user.id
-    detail = UserDetail(user_id=id, field_a=job,
-                        field_b=tag1, field_c=tag2, field_d=tag3)
-    session.add(detail)
-    session.commit()
-    session.close()
+
+    UserDetail.add(user_id=user.id, field_a=job,
+                   field_b=tag1, field_c=tag2, field_d=tag3)
 
 
-def importUser(bindId, name, id, email, job, intro, link, tag1, tag2, tag3, picture, ticket, qrcode=None):
-    session = DB_session()
-    
-    addUser = User(bind_id=bindId, name=name, id=id, email=email,
-                   intro=intro, link=link, picture=picture, qrcode=qrcode)
-    
-    session.add(addUser)
-    session.commit()
+def import_user(bindId, name, id, email, job, intro, link, tag1, tag2, tag3, picture, ticket, qrcode=None):
+    User.add(bind_id=bindId, name=name, id=id, email=email,
+             intro=intro, link=link, picture=picture, qrcode=qrcode)
 
-    detail = UserDetail(user_id=id, field_a=job,
-                        field_b=tag1, field_c=tag2, field_d=tag3)
-    
-    tags = Tags(user_id=id, tag_name="ticket", tag_value=ticket)
-    
-    session.add(detail)
-    session.add(tags)
-    
-    session.commit()
-    session.close()
+    UserDetail.add(user_id=id, field_a=job,
+                   field_b=tag1, field_c=tag2, field_d=tag3)
 
-# importUser("3A2B","真C折", 3,"karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg","超級大佬","201911041604381349845222")
+    Tags.add(user_id=id, tag_name="ticket", tag_value=ticket)
+
+# importUser("3A2B","真C折", 16,"karl@lin.com","大Boss","木木卡有限","https://google.com.tw","老闆","沒有頭髮","戴眼鏡","https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg","超級大佬","201911041604381349845222")
 
 
-def editUser(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
-    session = DB_session()
-    user = session.query(User).filter(User.line_user_id == lineUserId).first()
-    user.name = name
-    user.email = email
-    user.intro = intro
-    user.link = link
-    user.picture = picture
-    detail = session.query(UserDetail).filter(
-        UserDetail.user_id == user.id).first()
-    detail.field_a = job
-    detail.field_b = tag1
-    detail.field_c = tag2
-    detail.field_d = tag3
-    session.commit()
-    session.close()
+@session_commit
+def edit_user(lineUserId, name, email, job, intro, link, tag1, tag2, tag3, picture):
+    id = session.query(User).filter(User.line_user_id == lineUserId).first().id
+
+    user = session.query(User).filter(User.id == id)
+    user.update({'name': name, 'email': email, 'intro': intro,
+                 'link': link, 'picture': picture})
+
+    detail = session.query(UserDetail).filter(UserDetail.user_id == id)
+    detail.update({'field_a': job, 'field_b': tag1,
+                   'field_c': tag2, 'field_d': tag3})
 
 
-def unbindUser(lineUserId):
-    session = DB_session()
-    
+@session_commit
+def unbind_user(lineUserId):
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
 
     if user is None:
         return False
     else:
-        comments = session.query(Comment).filter(Comment.sender == lineUserId).all()
-        
+        comments = session.query(Comment).filter(
+            Comment.sender == lineUserId).all()
+
         for comment in comments:
             session.delete(comment)
-        session.commit()
 
         user.line_user_id = null()
-        session.commit()
-
-        session.close()
 
         return True
+unbind_user("LOL")
 
 
-def bindUser(bindId, lineUserId):
-    session = DB_session()
+@session_commit
+def bind_user(bindId, lineUserId):
+    user = session.query(User).filter(User.bind_id == bindId)
+    user.update({'line_user_id': lineUserId})
+
+
+def check_repeat(bindId):
     user = session.query(User).filter(User.bind_id == bindId).first()
-    user.line_user_id = lineUserId
-    session.commit()
-    session.close()
 
-
-def checkRepeat(bindId):
-    session = DB_session()
-    user = session.query(User).filter(User.bind_id == bindId).first()
-    session.close()
     if(user.line_user_id != None):
         return True
     else:
         return False
 
 
-def checkNonExist(bindId):
-    session = DB_session()
+def check_nonexist(bindId):
     user = session.query(User).filter(User.bind_id == bindId).first()
-    session.close()
+
     if(user == None):
         return True
     else:
         return False
 
 
-def getProfile(lineUserId):
-    session = DB_session()
+def get_profile(lineUserId):
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
     detail = session.query(UserDetail).filter(
         UserDetail.user_id == user.id).first()
-    session.close()
     profileJson = {
         "id": user.id,
         "name": user.name,
@@ -143,12 +122,10 @@ def getProfile(lineUserId):
     return profileJson
 
 
-def findSomeone(id):
-    session = DB_session()
+def find_someone(id):
     user = session.query(User).filter(User.id == id).first()
     detail = session.query(UserDetail).filter(
         UserDetail.user_id == user.id).first()
-    session.close()
     profileJson = {
         "id": user.id,
         "name": user.name,
@@ -164,68 +141,49 @@ def findSomeone(id):
     return profileJson
 
 
-def getPicture(lineUserId):
-    session = DB_session()
+def get_picture(lineUserId):
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
-    session.close()
     return str(user.picture)
 
 
-def getName(lineUserId):
-    session = DB_session()
+def get_name(lineUserId):
     user = session.query(User).filter(User.line_user_id == lineUserId).first()
-    session.close()
     return str(user.name)
 
 
-def getComments(user_id):
-    session = DB_session()
-    
-    comments = session.query(Comment).filter(Comment.receiver == user_id).order_by(desc(Comment.create_time)).all()
+def get_comments(user_id):
+    comments = session.query(Comment).filter(
+        Comment.receiver == user_id).order_by(desc(Comment.create_time)).all()
     output = []
-    
+
     for comment in comments:
-        time = datetime.fromtimestamp(comment.create_time).strftime('%Y-%m-%d %H:%M')
-        output.append({"name": comment.user.name, "time": time, "content": comment.content})
-    
-    session.close()
-    
+        time = datetime.fromtimestamp(
+            comment.create_time).strftime('%Y-%m-%d %H:%M')
+        output.append({"name": comment.user.name, "time": time,
+                       "content": comment.content})
+
     return output
 
 
-def addComments(sender, receiver, content, ts):
-    session = DB_session()
-    comment = Comment(create_time=ts, sender=sender,
-                      receiver=receiver, content=content)
-    session.add(comment)
-    session.commit()
-    session.close()
+def add_comments(sender, receiver, content, ts):
+    Comment.add(create_time=ts, sender=sender,
+                receiver=receiver, content=content)
 
 
-def addFollow(lineUserId, followTs):
-    session = DB_session()
-    follow = Followers(line_user_id=lineUserId, create_time=followTs)
-    session.add(follow)
-    session.commit()
-    session.close()
+def add_follow(lineUserId, followTs):
+    Followers.add(line_user_id=lineUserId, create_time=followTs)
 
 
-def addLogs(lineUserId, comand, content, callTs):
-    session = DB_session()
+def add_logs(lineUserId, comand, content, callTs):
     spend = round((time() - callTs)*1000)
-    log = Logs(line_user_id=lineUserId, comand=comand,
-               content=content, create_time=callTs, spend_ms=spend)
-    session.add(log)
-    session.commit()
-    session.close()
+    Logs.add(line_user_id=lineUserId, comand=comand,
+             content=content, create_time=callTs, spend_ms=spend)
 
 
-def drawCard():
-    session = DB_session()
+def draw_card():
     user = session.query(User).order_by(func.rand()).first()
     detail = session.query(UserDetail).filter(
         UserDetail.user_id == user.id).first()
-    session.close()
     profileJson = {
         "id": user.id,
         "name": user.name,

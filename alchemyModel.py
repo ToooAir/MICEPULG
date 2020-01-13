@@ -1,13 +1,34 @@
-from alchemyStart import engine
+from alchemyStart import engine , DB_session
+from sqlalchemy.sql import text
 
 from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
 
 
-class User(Base):
+session = DB_session()
+
+def session_orm(func):
+    def wrapper(self,**kwargs):
+        func(self,**kwargs)
+        session.commit()
+    return wrapper
+
+
+class BaseOrm(object):
+    @classmethod
+    @session_orm
+    def add(cls, **kwargs):
+        session.add(cls(**kwargs))
+
+
+class _Base(object):
+    query = DB_session.query_property()
+    
+Base = declarative_base(cls=_Base)
+
+class User(Base,BaseOrm):
     __tablename__ = 'user'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     bind_id = Column('bind_id', String(4))
@@ -22,7 +43,8 @@ class User(Base):
     qrcode = Column('qrcode', String(32))
 
 
-class UserDetail(Base):
+
+class UserDetail(Base, BaseOrm):
     __tablename__ = 'user_detail'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey(
@@ -34,7 +56,7 @@ class UserDetail(Base):
     field_e = Column('field_e', Text)
 
 
-class Tags(Base):
+class Tags(Base, BaseOrm):
     __tablename__ = 'tags'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'))
@@ -42,7 +64,7 @@ class Tags(Base):
     tag_value = Column('Tag_value', String(20))
 
 
-class Logs(Base):
+class Logs(Base, BaseOrm):
     __tablename__ = 'logs'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     line_user_id = Column('line_user_id', String(64))
@@ -53,14 +75,14 @@ class Logs(Base):
     spend_ms = Column('spend_ms', Integer)
 
 
-class Followers(Base):
+class Followers(Base, BaseOrm):
     __tablename__ = 'followers'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     line_user_id = Column('line_user_id', String(64))
     create_time = Column('create_time', Integer)
 
 
-class Comment(Base):
+class Comment(Base, BaseOrm):
     __tablename__ = 'comment'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     create_time = Column('create_time', Integer)
