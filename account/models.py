@@ -88,6 +88,7 @@ class Comment(Base, BaseOrm):
     def get_dict_order_by_time(**kwargs):
         comments = Comment.query.filter_by(**kwargs).order_by(Comment.create_time).all()
         output = []
+
         for comment in comments:
             time = datetime.fromtimestamp(comment.create_time).strftime(
                 "%Y-%m-%d %H:%M"
@@ -95,6 +96,7 @@ class Comment(Base, BaseOrm):
             output.append(
                 {"name": comment.user.name, "time": time, "content": comment.content}
             )
+            
         return output
 
 
