@@ -47,7 +47,7 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
         "action": {
           "type": "uri",
           "label": "Find",
-          "uri": "line://app/1653596770-zMa3Gw7g"
+          "uri": "line://app/1653599527-KjlZpO3N?page=find"
         }
       },
       {
@@ -127,7 +127,7 @@ curl -v -X POST https://api.line.me/v2/bot/richmenu \
         "action": {
           "type": "uri",
           "label": "login",
-          "uri": "line://app/1653596770-86mJ3DaK"
+          "uri": "line://app/1653599527-KjlZpO3N?page=login"
         }
       }
    ]

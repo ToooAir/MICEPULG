@@ -6,7 +6,7 @@ window.onload = function (e) {
 
 function initializeApp(data) {
     var lineUserId = data.context.userId;
-    var path = window.location.pathname
+    var path = window.location.href;
 
     if(path.indexOf("login")!=-1){
         this.inputSelect();

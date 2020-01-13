@@ -1,33 +1,41 @@
-import alchemyFunc
-from cloudStorage import uploadImage, deleteImage
-from config import config
-
-from time import time
 from datetime import datetime
-from json import loads as json_load, dumps as json_dumps
-
+from json import dumps as json_dumps
+from json import loads as json_load
+from time import time
 from uuid import uuid1
 
-from flask import Flask, request, abort, render_template, send_from_directory, make_response, g
-
-from linebot import (
-    LineBotApi, WebhookHandler
+from flask import (
+    Flask,
+    abort,
+    g,
+    make_response,
+    render_template,
+    request,
+    send_from_directory,
 )
-from linebot.exceptions import (
-    InvalidSignatureError
-)
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
-    MessageEvent, FollowEvent, PostbackEvent, TextMessage, TextSendMessage, FlexSendMessage
+    FlexSendMessage,
+    FollowEvent,
+    MessageEvent,
+    PostbackEvent,
+    TextMessage,
+    TextSendMessage,
 )
+
+import alchemyFunc
+from cloudStorage import deleteImage, uploadImage
+from config import config
 
 # config
-line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
-handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
+line_bot_api = LineBotApi(config["LINE_CHANNEL_ACCESS_TOKEN"])
+handler = WebhookHandler(config["LINE_CHANNEL_SECRET"])
 
 
 def setPicture(user):
-    if user['picture'] == "":
-        return config['default_avater']
+    if user["picture"] == "":
+        return config["default_avater"]
     else:
         return user["picture"]
 
@@ -50,46 +58,37 @@ def before_req():
     g.config = config
 
 
-
 @app.context_processor
 def utility_processor():
     def setuuid(static):
-        return static+"?v="+g.uuid
+        return static + "?v=" + g.uuid
 
-    return {'setuuid': setuuid}
+    return {"setuuid": setuuid}
+
 
 # website
-@app.route("/login", methods=["GET"])
-def login():
-    return render_template("login.html", title="登入")
-
-
-@app.route("/signup", methods=["GET"])
-def signup():
-    return render_template("signup.html", title="註冊")
-
-
-@app.route("/edit", methods=["GET"])
-def edit():
-    return render_template("edit.html", title="個人資料")
-
-
-@app.route("/find", methods=["GET"])
-def find():
-    return render_template("find.html", title="找人")
-
-
-@app.route("/comment", methods=["GET"])
-def comment():
-    id = request.args.get('id')
-    name = alchemyFunc.find_someone(id)["name"]
-    output = alchemyFunc.get_comments(id)
-    return render_template("comment.html", name=name, output=output, title="留言")
+@app.route("/", methods=["GET"])
+def index():
+    page = request.args.get("page")
+    if page == "login":
+        return render_template("login.html", title="登入")
+    elif page == "signup":
+        return render_template("signup.html", title="註冊")
+    elif page == "edit":
+        return render_template("edit.html", title="個人資料")
+    elif page == "find":
+        return render_template("find.html", title="找人")
+    elif page == "comment":
+        id = request.args.get("id")
+        name = alchemyFunc.find_someone(id)["name"]
+        output = alchemyFunc.get_comments(id)
+        return render_template("comment.html", name=name, output=output, title="留言")
 
 
 @app.route("/static/<path:path>")
 def send_static(path):
     return send_from_directory("static", path)
+
 
 # AJAX
 @app.route("/bind", methods=["POST"])
@@ -97,16 +96,16 @@ def bind():
     bindId = request.form["bindId"]
     lineUserId = request.form["lineUserId"]
 
-    if(alchemyFunc.check_nonexist(bindId)):
+    if alchemyFunc.check_nonexist(bindId):
         return "此驗證碼不存在，請確認你的驗證碼或洽詢現場工作人員。"
-    elif(alchemyFunc.check_repeat(bindId)):
+    elif alchemyFunc.check_repeat(bindId):
         return "此驗證碼已使用過，請確認你的驗證碼或洽詢現場工作人員。"
 
     alchemyFunc.bind_user(bindId, lineUserId)
 
     resp = setResponse(request.form)
 
-    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
+    line_bot_api.link_rich_menu_to_user(lineUserId, config["richmenu"]["menu"])
 
     alchemyFunc.add_logs(lineUserId, "bind", "", g.startTime)
 
@@ -118,19 +117,18 @@ def register():
     lineUserId = request.form["lineUserId"]
     name = request.form["name"]
 
-    imageurl = config['default_avater']
+    imageurl = config["default_avater"]
     if "image" in request.files:
-        filename = str(uuid1()) + "." + \
-            request.files["image"].filename.split(".")[-1]
+        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
         imageurl = uploadImage(request.files["image"], filename)
     else:
-        imageurl = config['default_avater']
+        imageurl = config["default_avater"]
 
-    alchemyFunc.add_user(**request.form,picture=imageurl)
+    alchemyFunc.add_user(**request.form, picture=imageurl)
 
     resp = setResponse(name)
 
-    line_bot_api.link_rich_menu_to_user(lineUserId, config['richmenu']['menu'])
+    line_bot_api.link_rich_menu_to_user(lineUserId, config["richmenu"]["menu"])
     alchemyFunc.add_logs(lineUserId, "register", "", g.startTime)
 
     return resp
@@ -145,15 +143,14 @@ def editprofile():
     imageurl = ""
 
     if "image" in request.files:
-        if filename != config['default_avater']:
+        if filename != config["default_avater"]:
             deleteImage(filename)
-        filename = str(uuid1()) + "." + \
-            request.files["image"].filename.split(".")[-1]
+        filename = str(uuid1()) + "." + request.files["image"].filename.split(".")[-1]
         imageurl = uploadImage(request.files["image"], filename)
     else:
         imageurl = filename
 
-    alchemyFunc.edit_user(**request.form,picture=imageurl)
+    alchemyFunc.edit_user(**request.form, picture=imageurl)
 
     resp = setResponse(name)
 
@@ -210,65 +207,75 @@ def message_text(event):
     text = event.message.text
 
     # Find
-    if(text.startswith("#") and text[1:].isdigit()):
+    if text.startswith("#") and text[1:].isdigit():
         try:
             find = text.split("#")[1]
 
             user = alchemyFunc.find_someone(find)
             picture = setPicture(user)
 
-            flex = json_load(render_template(
-                'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
+            flex = json_load(
+                render_template(
+                    "Find.json",
+                    user=user,
+                    picture=picture,
+                    comment=config["liff"] + "?page=comment",
+                ),
+                strict=False,
+            )
             line_bot_api.reply_message(
-                event.reply_token, [
-                    FlexSendMessage(alt_text=text, contents=flex)
-                ]
+                event.reply_token, [FlexSendMessage(alt_text=text, contents=flex)]
             )
             alchemyFunc.add_logs(lineUserId, "find", "", g.startTime)
         except:
             line_bot_api.reply_message(
-                event.reply_token, [
-                    TextSendMessage(text="查無此人")
-                ]
+                event.reply_token, [TextSendMessage(text="查無此人")]
             )
 
     # Bind
-    elif(text.startswith("#") and len(text[1:]) == 4):
+    elif text.startswith("#") and len(text[1:]) == 4:
         line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text="登入成功，請將您的個人專屬編號寫上號碼牌： #{}".format(
-                    alchemyFunc.get_user(lineUserId).id))
-            ]
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text=f"登入成功，請將您的個人專屬編號寫上號碼牌： #{alchemyFunc.get_user(lineUserId).id}"
+                )
+            ],
         )
 
-    elif(text == "修改成功"):
+    elif text == "修改成功":
         user = alchemyFunc.get_profile(lineUserId)
         picture = setPicture(user)
 
-        flex = json_load(render_template(
-            'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
+        flex = json_load(
+            render_template(
+                "Me.json",
+                user=user,
+                picture=picture,
+                edit=config["liff"] + "?page=edit",
+                comment=config["liff"] + "?page=comment",
+            ),
+            strict=False,
+        )
+        line_bot_api.reply_message(
+            event.reply_token, FlexSendMessage(alt_text=text, contents=flex)
+        )
+
+    elif text == "我要註冊":
         line_bot_api.reply_message(
             event.reply_token,
-            FlexSendMessage(alt_text=text, contents=flex)
+            [
+                TextSendMessage(
+                    text=f"註冊成功，請將您的個人專屬編號寫上號碼牌： #{alchemyFunc.get_user(lineUserId).id}"
+                )
+            ],
         )
 
-    elif(text == "我要註冊"):
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text="註冊成功，請將您的個人專屬編號寫上號碼牌： #{}".format(
-                    alchemyFunc.get_user(lineUserId).id))
-            ]
-        )
-
-    elif(text == "/reset"):
+    elif text == "/reset":
         alchemyFunc.unbind_user(lineUserId)
 
         line_bot_api.unlink_rich_menu_from_user(lineUserId)
-        line_bot_api.reply_message(
-            event.reply_token, [
-                TextSendMessage(text="已重置")
-            ]
-        )
+        line_bot_api.reply_message(event.reply_token, [TextSendMessage(text="已重置")])
 
         alchemyFunc.add_logs(lineUserId, "reset", "", g.startTime)
 
@@ -286,43 +293,52 @@ def handlePostback(event):
     lineUserId = event.source.user_id
     text = event.postback.data
 
-    if(text == "個人資料"):
+    if text == "個人資料":
 
         user = alchemyFunc.get_profile(lineUserId)
         picture = setPicture(user)
 
-        flex = json_load(render_template(
-            'Me.json', user=user, picture=picture, edit=config['liff']['edit'], comment=config['liff']['comment']), strict=False)
+        flex = json_load(
+            render_template(
+                "Me.json",
+                user=user,
+                picture=picture,
+                edit=config["liff"] + "?page=edit",
+                comment=config["liff"] + "?page=comment",
+            ),
+            strict=False,
+        )
         line_bot_api.reply_message(
-            event.reply_token,
-            FlexSendMessage(alt_text=text, contents=flex)
+            event.reply_token, FlexSendMessage(alt_text=text, contents=flex)
         )
 
         alchemyFunc.add_logs(lineUserId, text, "", g.startTime)
 
-    elif(text == "抽卡"):
+    elif text == "抽卡":
 
         user = alchemyFunc.draw_card()
         picture = setPicture(user)
 
-        flex = json_load(render_template(
-            'Find.json', user=user, picture=picture, comment=config['liff']['comment']), strict=False)
+        flex = json_load(
+            render_template(
+                "Find.json",
+                user=user,
+                picture=picture,
+                comment=config["liff"] + "?page=comment",
+            ),
+            strict=False,
+        )
         line_bot_api.reply_message(
-            event.reply_token, [
-                FlexSendMessage(alt_text=text, contents=flex)
-            ]
+            event.reply_token, [FlexSendMessage(alt_text=text, contents=flex)]
         )
 
         alchemyFunc.add_logs(lineUserId, text, "", g.startTime)
 
-    elif(text == "活動資訊"):
+    elif text == "活動資訊":
 
-        flex = json_load(render_template(
-            'Event.json'), strict=False)
+        flex = json_load(render_template("Event.json"), strict=False)
         line_bot_api.reply_message(
-            event.reply_token, [
-                FlexSendMessage(alt_text=text, contents=flex)
-            ]
+            event.reply_token, [FlexSendMessage(alt_text=text, contents=flex)]
         )
 
         alchemyFunc.add_logs(lineUserId, text, "", g.startTime)

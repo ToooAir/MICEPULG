@@ -89,7 +89,7 @@
         "action": {
           "type": "uri",
           "label": "留言給他",
-          "uri": "{{comment}}?id={{user.id}}"
+          "uri": "{{comment}}&id={{user.id}}"
         },
         "style": "primary",
         "color": "#555555"
