@@ -11,7 +11,6 @@ config = {
     },
     "richmenu": {"login": "", "menu": ""},
     "liff": "",
-    "domain": "https://d7cac9a9.ngrok.io/",
     "CLOUD_STORAGE_BUCKET": "tgif.momoka.tw",
     "default_avater": "https://storage.googleapis.com/tgif.momoka.tw/avatar/00.jpg",
     "allow_signup": True,

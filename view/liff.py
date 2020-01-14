@@ -60,6 +60,8 @@ def index():
         name = User.get(id=id).name
         output = Comment.get_dict_order_by_time(receiver=id)
         return render_template("comment.html", name=name, output=output, title="留言")
+    elif page == "liff":
+        return render_template("liff.html", title="liff login")
 
 
 @liff.route("/static/<path:path>")
