@@ -12,7 +12,7 @@ from flask import (
 )
 
 from account.models import Comment, Logs, User, UserDetail
-from config import config
+from config import config, liffid
 from utils.cloudStorage import deleteImage, uploadImage
 from utils.models import set_attribute
 from view.message import line_bot_api
@@ -48,20 +48,22 @@ def utility_processor():
 def index():
     page = request.args.get("page")
     if page == "login":
-        return render_template("login.html", title="登入")
+        return render_template("login.html", title="登入", liffid=liffid)
     elif page == "signup":
-        return render_template("signup.html", title="註冊")
+        return render_template("signup.html", title="註冊", liffid=liffid)
     elif page == "edit":
-        return render_template("edit.html", title="個人資料")
+        return render_template("edit.html", title="個人資料", liffid=liffid)
     elif page == "find":
-        return render_template("find.html", title="找人")
+        return render_template("find.html", title="找人", liffid=liffid)
     elif page == "comment":
         id = request.args.get("id")
         name = User.get(id=id).name
         output = Comment.get_dict_order_by_time(receiver=id)
-        return render_template("comment.html", name=name, output=output, title="留言")
+        return render_template(
+            "comment.html", name=name, output=output, title="留言", liffid=liffid,
+        )
     elif page == "liff":
-        return render_template("liff.html", title="liff login")
+        return render_template("liff.html", title="liff login", liffid=liffid)
 
 
 @liff.route("/static/<path:path>")

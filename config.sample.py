@@ -24,3 +24,5 @@ SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}/{}?charset=utf8mb4".format(
     config["mysql"]["host"],
     config["mysql"]["database"],
 )
+
+liffid = config["liff"].strip("line://app/")
