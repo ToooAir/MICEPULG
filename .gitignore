@@ -1,9 +1,9 @@
-*.pyc
 .DS_Store
-/static/uploadImage/
 /.vscode/
-/__pycache__/*
+*/__pycache__
+__pycache__
 .env
 config.py
+test.py
 boky-chatbot-*.json
 user_data.csv

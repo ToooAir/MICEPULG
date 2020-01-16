@@ -1,33 +1,42 @@
 window.onload = function (e) {
-    liff.init(function (data) {
-        initializeApp(data);
-    });
+    liff
+        .init({
+            liffId: window.liffid
+        })
+        .then(() => {
+            initializeApp();
+        })
+        .catch((err) => {
+            console.log(err.code, err.message);
+        });
 };
 
-function initializeApp(data) {
-    var lineUserId = data.context.userId;
-    var path = window.location.href;
+function initializeApp() {
 
-    if(path.indexOf("login")!=-1){
+    liff.getProfile().then(function(profile){
+        var lineUserId = profile.userId;
+        var path = window.location.href;
+        if (path.indexOf("login") != -1) {
         this.inputSelect();
         this.login(lineUserId);
-    }
-    else if(path.indexOf("signup")!=-1){
-        this.changeupload();
-        this.singUp(lineUserId);
-    }
-    else if(path.indexOf("edit")!=-1){
-        this.changeupload();
-        this.getProfile(lineUserId);
-        this.editprofile(lineUserId);
-    }
-    else if(path.indexOf("find")!=-1){
-        this.sendMessage();
-    }
-    else if(path.indexOf("comment")!=-1){
-        id = getId();
-        addComment(lineUserId, id);
-    }
+        }
+        else if (path.indexOf("signup") != -1) {
+            this.changeupload();
+            this.singUp(lineUserId);
+        }
+        else if (path.indexOf("edit") != -1) {
+            this.changeupload();
+            this.getProfile(lineUserId);
+            this.editprofile(lineUserId);
+        }
+        else if (path.indexOf("find") != -1) {
+            this.sendMessage();
+        }
+        else if (path.indexOf("comment") != -1) {
+            id = getId();
+            addComment(lineUserId, id);
+        }
+    });
 }
 
 
@@ -69,7 +78,7 @@ function preview(input) {
                         canvas.width,
                         canvas.height
                     );
-                    
+
                     $("#previewIMG").attr('src', canvas.toDataURL('image/jpeg', 0.8));
                 }
                 image.src = e.target.result;

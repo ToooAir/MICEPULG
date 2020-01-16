@@ -15,7 +15,8 @@
 
 <body>
     {% block content %}{% endblock %}
-    <script src=" https://d.line-scdn.net/liff/1.0/sdk.js"> </script> <script
+    <script src="{{ setuuid("/static/JS/miceplug.js") }}"></script>
+    <script src=" https://static.line-scdn.net/liff/edge/2.1/sdk.js"> </script> <script
         src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
         </script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -25,7 +26,9 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
-    <script src="{{ setuuid("/static/JS/miceplug.js") }}"></script>
+    <script src=" https://static.line-scdn.net/liff/edge/2.1/sdk.js"> </script>
+    <script>window.liffid = "{{liffid}}"</script>
+
     </body>
 
 </html>

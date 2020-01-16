@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<button onclick="Login()">Login</button>
+<button onclick="Logout()">Logout</button>
+<script>
+function Login () {
+    url = window.location.protocol+"//"+window.location.host+"/";
+      liff.login({
+        redirectUri: url
+      })
+    };
+
+function Logout () {
+      liff.logout()
+   };
+</script>
+
+
+{% endblock %}
