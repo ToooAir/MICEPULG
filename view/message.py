@@ -11,6 +11,7 @@ from linebot.models import (
     PostbackEvent,
     TextMessage,
     TextSendMessage,
+    BeaconEvent,
 )
 
 from account.models import Comment, Followers, Logs, User, UserDetail
@@ -152,6 +153,17 @@ def message_text(event):
             ],
         )
 
+    elif text == "叫你老闆出來":
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text="哈囉，我是Ｃ哲！"
+                ),
+                
+            ],
+        )
+
     elif text == "/reset":
         user = User.get(line_user_id=lineUserId)
 
@@ -253,3 +265,9 @@ def handlePostback(event):
         )
 
     Logs.format(line_user_id=lineUserId, comand=text, create_time=g.startTime)
+
+@handler.add(BeaconEvent)
+def handle_beacon_event(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=event.beacon.type+" "+event.beacon.hwid))

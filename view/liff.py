@@ -46,6 +46,8 @@ def utility_processor():
 # website
 @liff.route("/", methods=["GET"])
 def index():
+    if request.args.get("liff.state") != None:
+        return render_template("loading.html", title="loading", liffid=liffid)
     page = request.args.get("page")
     if page == "login":
         return render_template("login.html", title="登入", liffid=liffid)

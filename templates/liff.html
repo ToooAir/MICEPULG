@@ -4,6 +4,7 @@
 
 <button onclick="Login()">Login</button>
 <button onclick="Logout()">Logout</button>
+<button onclick="BLE()">BLE</button>
 <script>
 function Login () {
     url = window.location.protocol+"//"+window.location.host+"/";
@@ -14,7 +15,20 @@ function Login () {
 
 function Logout () {
       liff.logout()
-   };
+    };
+
+function BLE () {
+  liff.bluetooth.requestDevice().then(device => {
+    const listener = (e) => {
+      device.removeEventListener('advertisementreceived', listener);
+    };
+    device.addEventListener('advertisementreceived', listener);
+
+    device.watchAdvertisements();
+}).catch(e => {
+    console.log(e.code + ':' + e.message);
+});
+    };
 </script>
 
 
